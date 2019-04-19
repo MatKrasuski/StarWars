@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using API.Services;
+﻿using API.Services;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -9,7 +7,7 @@ namespace API.Controllers
     [ApiController]
     public class CharactersController : ControllerBase
     {
-        private ICharacterService _characterService;
+        private readonly ICharacterService _characterService;
 
         public CharactersController(ICharacterService characterService)
         {

@@ -1,6 +1,6 @@
-﻿namespace API.Models
+﻿namespace Domain.Dtos
 {
-    public class Character
+    public class CharacterDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

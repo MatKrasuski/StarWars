@@ -1,55 +1,37 @@
 ﻿using API.Models;
+using Domain.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
+using API.Mappers;
 
 namespace API.Services
 {
     public class CharacterService : ICharacterService
-
     {
+        private readonly ICharacterRepository _characterRepository;
+        private readonly ICharacterMapper _characterMapper;
+
+        public CharacterService(ICharacterRepository characterRepository, ICharacterMapper characterMapper)
+        {
+            _characterRepository = characterRepository;
+            _characterMapper = characterMapper;
+        }
+
         public List<Character> GetAllCharacters()
         {
-            return _characters;
+            var charactersDto = _characterRepository.GetAllCharacters();
+            return _characterMapper.MapCharacters(charactersDto);
         }
 
-        public Character GetCharacter(int id)
+        public Character GetCharacter(int characterId)
         {
-            var character = _characters.Where(c => c.Id == id).FirstOrDefault();
+            var characterDto = _characterRepository.GetCharacter(characterId);
 
-            if (character == null)
+            if (characterDto == null)
             {
-                return new NullCharacter { Id = id };
+                return new NullCharacter{Id = characterId};
             }
 
-            return character;
+            return _characterMapper.MapSingleCharacter(characterDto);
         }
-
-        private readonly List<Character> _characters = new List<Character>
-            {
-                new Character
-                {
-                    Id = 1,
-                    Name = "Luke",
-                    Episodes = new[]{ "NEWHOPE", "EMPIRE", "JEDI" },
-                    Planet = "Tatooine",
-                    Friends = new[]{ "Han Solo", "Leia Organa", "C - 3PO", "R2 - D2" }
-                },
-
-                new Character
-                {
-                    Id = 2,
-                    Name = "Darth Vader",
-                    Episodes = new[]{ "NEWHOPE", "EMPIRE", "JEDI" },
-                    Friends = new[]{ "Wilhuff Tarkin" }
-                },
-
-                new Character
-                {
-                    Id = 3,
-                    Name = "Han Solo",
-                    Episodes = new[]{ "NEWHOPE", "EMPIRE", "JEDI" },
-                    Friends = new[]{ "Luke Skywalker", "Leia Organa", "R2-D2" }
-                },
-            };
     }
 }
