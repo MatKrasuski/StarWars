@@ -28,7 +28,7 @@ namespace API.Services
 
             if (characterDto == null)
             {
-                return new NullCharacter{Id = characterId};
+                return new NullCharacter();
             }
 
             return _characterMapper.MapSingleCharacter(characterDto);

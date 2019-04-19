@@ -1,4 +1,7 @@
-﻿using API.Services;
+﻿using API.Mappers;
+using API.Services;
+using Domain.Interfaces;
+using Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +39,8 @@ namespace API
         private void ConfigureDI(IServiceCollection services)
         {
             services.AddScoped<ICharacterService, CharacterService>();
+            services.AddScoped<ICharacterRepository, CharacterRepository>();
+            services.AddScoped<ICharacterMapper, CharacterMapper>();
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using FluentAssertions;
 
 namespace UnitTests.Controller
 {
@@ -48,5 +49,21 @@ namespace UnitTests.Controller
             _charactersServiceMock.Verify(m => m.GetCharacter(id));
             Assert.IsInstanceOf<JsonResult>(result);
         }
+
+        [Test]
+        public void should_return_no_content_if_service_returns_NullCandidate()
+        {
+            //given
+            var id = 1;
+
+            _charactersServiceMock.Setup(m => m.GetCharacter(id)).Returns(new NullCharacter());
+
+            //when
+            var result = _characterController.Get(id);
+
+            //then
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
+
     }
 }

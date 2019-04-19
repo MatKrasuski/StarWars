@@ -5,7 +5,7 @@ using Domain.Interfaces;
 
 namespace Domain.Repositories
 {
-    class CharacterRepository : ICharacterRepository
+    public class CharacterRepository : ICharacterRepository
     {
         public List<CharacterDto> GetAllCharacters()
         {
