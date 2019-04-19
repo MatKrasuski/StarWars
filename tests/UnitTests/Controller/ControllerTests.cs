@@ -25,24 +25,27 @@ namespace UnitTests.Controller
         }
 
         [Test]
-        public void should_call_character_service_from_Get()
-        {
-            //given
-            //when
-            _characterController.Get();
-
-            //then
-            _charactersServiceMock.Verify(m => m.GetAllCharacters());
-        }
-
-        [Test]
-        public void should_return_JsonRsult()
+        public void should_call_GetAllCharacters_from_character_service()
         {
             //given
             //when
             var result = _characterController.Get();
 
             //then
+            _charactersServiceMock.Verify(m => m.GetAllCharacters());
+            Assert.IsInstanceOf<JsonResult>(result);
+        }
+
+        [Test]
+        public void should_call_GetCharacter_from_character_service()
+        {
+            //given
+            var id = 1;
+            //when
+            var result = _characterController.Get(id);
+
+            //then
+            _charactersServiceMock.Verify(m => m.GetCharacter(id));
             Assert.IsInstanceOf<JsonResult>(result);
         }
     }

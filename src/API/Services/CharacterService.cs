@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace API.Services
 {
@@ -9,6 +10,18 @@ namespace API.Services
         public List<Character> GetAllCharacters()
         {
             return _characters;
+        }
+
+        public Character GetCharacter(int id)
+        {
+            var character = _characters.Where(c => c.Id == id).FirstOrDefault();
+
+            if (character == null)
+            {
+                return new NullCharacter { Id = id };
+            }
+
+            return character;
         }
 
         private readonly List<Character> _characters = new List<Character>

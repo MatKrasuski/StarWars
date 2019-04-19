@@ -16,35 +16,28 @@ namespace API.Controllers
             _characterService = characterService;
         }
 
-        // GET api/values
         [HttpGet]
         public JsonResult Get()
         {
-            var characters = _characterService.GetAllCharacters();
-
-            return new JsonResult(characters);
+            return new JsonResult(_characterService.GetAllCharacters());
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public JsonResult Get(int id)
         {
-            return "value";
+            return new JsonResult(_characterService.GetCharacter(id));
         }
 
-        // POST api/values
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
