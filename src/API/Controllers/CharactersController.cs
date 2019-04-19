@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -7,11 +9,20 @@ namespace API.Controllers
     [ApiController]
     public class CharactersController : ControllerBase
     {
+        private ICharacterService _characterService;
+
+        public CharactersController(ICharacterService characterService)
+        {
+            _characterService = characterService;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public JsonResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var characters = _characterService.GetAllCharacters();
+
+            return new JsonResult(characters);
         }
 
         // GET api/values/5
