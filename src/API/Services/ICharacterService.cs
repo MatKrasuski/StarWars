@@ -1,12 +1,12 @@
 ﻿using API.Models;
 using System.Collections.Generic;
-using MongoDB.Bson;
+using System.Threading.Tasks;
 
 namespace API.Services
 {
     public interface ICharacterService
     {
-        List<Character> GetAllCharacters();
-        Character GetCharacter(string characterId);
+        Task<List<Character>> GetAllCharacters();
+        Task<Character> GetCharacter(string characterId);
     }
 }

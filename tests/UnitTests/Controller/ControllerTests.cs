@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using API.Models;
 
 namespace UnitTests.Controller
 {
@@ -20,15 +22,15 @@ namespace UnitTests.Controller
             _characterController = new CharactersController(_charactersServiceMock.Object);
 
             // Setups
-            _charactersServiceMock.Setup(m => m.GetAllCharacters()).Returns(new List<Character>());
+            _charactersServiceMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new List<Character>());
         }
 
         [Test]
-        public void should_call_GetAllCharacters_from_character_service()
+        public async Task should_call_GetAllCharacters_from_character_service()
         {
             //given
             //when
-            var result = _characterController.Get();
+            var result = await _characterController.Get();
 
             //then
             _charactersServiceMock.Verify(m => m.GetAllCharacters());
@@ -36,12 +38,12 @@ namespace UnitTests.Controller
         }
 
         [Test]
-        public void should_call_GetCharacter_from_character_service()
+        public async Task should_call_GetCharacter_from_character_service()
         {
             //given
             var id = "123";
             //when
-            var result = _characterController.Get(id);
+            var result = await _characterController.Get(id);
 
             //then
             _charactersServiceMock.Verify(m => m.GetCharacter(id));
@@ -49,15 +51,15 @@ namespace UnitTests.Controller
         }
 
         [Test]
-        public void should_return_no_content_if_service_returns_NullCandidate()
+        public async Task should_return_no_content_if_service_returns_NullCandidate()
         {
             //given
             var id = "123";
 
-            _charactersServiceMock.Setup(m => m.GetCharacter(id)).Returns(new NullCharacter());
+            _charactersServiceMock.Setup(m => m.GetCharacter(id)).ReturnsAsync(new NullCharacter());
 
             //when
-            var result = _characterController.Get(id);
+            var result = await _characterController.Get(id);
 
             //then
             Assert.IsInstanceOf<NoContentResult>(result);

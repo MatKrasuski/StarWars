@@ -1,8 +1,8 @@
 ﻿using Domain.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using API.Mappers;
 using API.Models;
-using MongoDB.Bson;
 
 namespace API.Services
 {
@@ -17,15 +17,15 @@ namespace API.Services
             _characterMapper = characterMapper;
         }
 
-        public List<Character> GetAllCharacters()
+        public async Task<List<Character>> GetAllCharacters()
         {
-            var charactersDto = _characterRepository.GetAllCharacters();
+            var charactersDto =  await _characterRepository.GetAllCharacters();
             return _characterMapper.MapCharacters(charactersDto);
         }
 
-        public Character GetCharacter(string characterId)
+        public async Task<Character> GetCharacter(string characterId)
         {
-            var characterDto = _characterRepository.GetCharacter(characterId);
+            var characterDto =  await _characterRepository.GetCharacter(characterId);
 
             if (characterDto == null)
             {

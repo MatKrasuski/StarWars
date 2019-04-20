@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domain.Dtos;
 using Domain.Repositories;
 using FluentAssertions;
@@ -23,7 +24,7 @@ namespace IntegrationTests.Repositories
         }
 
         [Test]
-        public void should_get_all_characters()
+        public async Task should_get_all_characters()
         {
             //given
             var characters = new List<CharacterDto>
@@ -49,14 +50,14 @@ namespace IntegrationTests.Repositories
             collection.InsertMany(characters);
 
             //when
-            var result = _characterRepository.GetAllCharacters();
+            var result = await _characterRepository.GetAllCharacters();
 
             //then
             result.Should().BeEquivalentTo(characters);
         }
 
         [Test]
-        public void should_get_single_character()
+        public async Task should_get_single_character()
         {
             //given
             var characterId = ObjectId.GenerateNewId();
@@ -73,7 +74,7 @@ namespace IntegrationTests.Repositories
             collection.InsertOne(character);
 
             //when
-            var result = _characterRepository.GetCharacter(characterId.ToString());
+            var result = await _characterRepository.GetCharacter(characterId.ToString());
 
             //then
             result.Should().BeEquivalentTo(character);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domain.Dtos;
 using Domain.Interfaces;
 using MongoDB.Bson;
@@ -26,16 +27,16 @@ namespace Domain.Repositories
             _collection = collectionName;
         }
 
-        public List<CharacterDto> GetAllCharacters()
+        public async Task<List<CharacterDto>> GetAllCharacters()
         {
             var collection = _database.GetCollection<CharacterDto>(_collection);
-            return collection.Find(FilterDefinition<CharacterDto>.Empty).ToList();
+            return (await collection.FindAsync(FilterDefinition<CharacterDto>.Empty)).ToList();
         }
 
-        public CharacterDto GetCharacter(string characterId)
+        public async Task<CharacterDto> GetCharacter(string characterId)
         {
             var collection = _database.GetCollection<CharacterDto>(_collection);
-            return collection.Find(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId))).FirstOrDefault();
+            return (await collection.FindAsync(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId)))).FirstOrDefault();
         }
     }
 }

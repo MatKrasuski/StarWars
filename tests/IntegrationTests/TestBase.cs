@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace IntegrationTests.Repositories
+namespace IntegrationTests
 {
     public class TestBase
     {

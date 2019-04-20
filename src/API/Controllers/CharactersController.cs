@@ -1,4 +1,5 @@
-﻿using API.Models;
+﻿using System.Threading.Tasks;
+using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -17,15 +18,15 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            return new JsonResult(_characterService.GetAllCharacters());
+            return new JsonResult(await _characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]
-        public ActionResult Get(string id)
+        public async Task<ActionResult> Get(string id)
         {
-            var character = _characterService.GetCharacter(id);
+            var character = await _characterService.GetCharacter(id);
 
             if (character is NullCharacter)
             {

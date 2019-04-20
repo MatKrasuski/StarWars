@@ -1,12 +1,12 @@
 ﻿using Domain.Dtos;
 using System.Collections.Generic;
-using MongoDB.Bson;
+using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
     public interface ICharacterRepository
     {
-        List<CharacterDto> GetAllCharacters();
-        CharacterDto GetCharacter(string characterId);
+        Task<List<CharacterDto>> GetAllCharacters();
+        Task<CharacterDto> GetCharacter(string characterId);
     }
 }
