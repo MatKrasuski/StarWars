@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using API.Models;
-using MongoDB.Bson;
 
 namespace UnitTests.Controller
 {
