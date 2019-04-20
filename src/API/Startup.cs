@@ -1,4 +1,5 @@
-﻿using API.Mappers;
+﻿using System.Linq;
+using API.Mappers;
 using API.Services;
 using Domain.Interfaces;
 using Domain.Repositories;
@@ -27,6 +28,12 @@ namespace API
                 .AddJsonOptions(options => 
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore
                 );
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
+                    new BadRequestObjectResult(actionContext.ModelState);
+            });
 
             ConfigureDI(services);
         }

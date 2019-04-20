@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using API.Models;
 using API.Services;
+using API.Validation;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -23,6 +26,7 @@ namespace API.Controllers
             return new JsonResult(await _characterService.GetAllCharacters());
         }
 
+        [ValidateIdFormat]
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(string id)
         {
@@ -36,13 +40,20 @@ namespace API.Controllers
             return new JsonResult(character);
         }
 
+        //[ValidateModel]
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult CreateCharacter([FromBody] CharacterBase character)
         {
+            if (ModelState.IsValid)
+            {
+                
+            }
+
+            return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPatch("{id}")]
+        public void Update(int id, [FromBody] string value)
         {
         }
 

@@ -6,7 +6,6 @@ using API.Services;
 using Domain.Dtos;
 using Domain.Interfaces;
 using FluentAssertions;
-using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 

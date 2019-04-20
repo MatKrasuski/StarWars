@@ -65,5 +65,22 @@ namespace UnitTests.Controller
             Assert.IsInstanceOf<NoContentResult>(result);
         }
 
+        [Test]
+        public void should_call_CreateCharacter_from_service()
+        {
+            //given
+            var character = new CharacterBase
+            {
+                Name = "luke",
+                Planet = "Tatooine",
+                Episodes = new []{"ep 1", "ep 2"},
+                Friends = new[] {"friend 1", "friend 2"}
+            };
+
+            //when
+            _characterController.CreateCharacter(character);
+
+            //then
+        }
     }
 }
