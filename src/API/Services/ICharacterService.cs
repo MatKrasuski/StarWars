@@ -1,6 +1,6 @@
-﻿using API.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Bussiness.Models;
 
 namespace API.Services
 {
@@ -8,5 +8,6 @@ namespace API.Services
     {
         Task<List<Character>> GetAllCharacters();
         Task<Character> GetCharacter(string characterId);
+        Task AddCharacter(CharacterBase character);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Mappers;
-using API.Models;
 using API.Services;
+using Bussiness.Models;
 using Domain.Dtos;
 using Domain.Interfaces;
 using FluentAssertions;
@@ -121,6 +121,19 @@ namespace UnitTests.Services
 
             //then
             result.Should().BeOfType<NullCharacter>();
+        }
+
+        [Test]
+        public async Task should_call_character_repository_AddCharacter()
+        {
+            //given
+            var character = new CharacterBase();
+
+            //when
+            await _characterService.AddCharacter(character);
+
+            //then
+            _characterRepositoryMock.Verify(m => m.AddCharacter(character));
         }
     }
 }

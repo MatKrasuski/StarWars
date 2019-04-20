@@ -1,6 +1,7 @@
 ﻿using Domain.Dtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Bussiness.Models;
 
 namespace Domain.Interfaces
 {
@@ -8,5 +9,6 @@ namespace Domain.Interfaces
     {
         Task<List<CharacterDto>> GetAllCharacters();
         Task<CharacterDto> GetCharacter(string characterId);
+        Task AddCharacter(CharacterBase character);
     }
 }

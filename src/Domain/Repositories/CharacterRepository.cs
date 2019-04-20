@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Bussiness.Models;
 using Domain.Dtos;
 using Domain.Interfaces;
 using MongoDB.Bson;
@@ -37,6 +38,12 @@ namespace Domain.Repositories
         {
             var collection = _database.GetCollection<CharacterDto>(_collection);
             return (await collection.FindAsync(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId)))).FirstOrDefault();
+        }
+
+        public async Task AddCharacter(CharacterBase character)
+        {
+            var collection = _database.GetCollection<CharacterBase>(_collection);
+            await collection.InsertOneAsync(character);
         }
     }
 }

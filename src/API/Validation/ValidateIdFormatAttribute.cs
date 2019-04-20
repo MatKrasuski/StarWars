@@ -15,9 +15,8 @@ namespace API.Validation
             if (id.Length != 24 || !isHexaDecimal)
             {
                 context.ModelState.AddModelError("validation error", $"Icorrect format id: {id}; Id should be 24 digit, hexadecimal string");
+                context.Result = new BadRequestObjectResult(context.ModelState);
             }
-
-            context.Result = new BadRequestObjectResult(context.ModelState);
         }
     }
 }

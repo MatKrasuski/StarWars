@@ -1,4 +1,4 @@
-﻿namespace API.Models
+﻿namespace Bussiness.Models
 {
     public class NullCharacter : Character
     {

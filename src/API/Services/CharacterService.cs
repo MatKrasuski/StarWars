@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Mappers;
-using API.Models;
+using Bussiness.Models;
 
 namespace API.Services
 {
@@ -33,6 +33,11 @@ namespace API.Services
             }
 
             return _characterMapper.MapSingleCharacter(characterDto);
+        }
+
+        public async Task AddCharacter(CharacterBase character)
+        {
+            await _characterRepository.AddCharacter(character);
         }
     }
 }

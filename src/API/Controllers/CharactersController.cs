@@ -1,11 +1,8 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using API.Models;
+﻿using System.Threading.Tasks;
 using API.Services;
 using API.Validation;
+using Bussiness.Models;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace API.Controllers
 {
@@ -40,16 +37,10 @@ namespace API.Controllers
             return new JsonResult(character);
         }
 
-        //[ValidateModel]
         [HttpPost]
-        public ActionResult CreateCharacter([FromBody] CharacterBase character)
+        public async Task AddCharacter([FromBody] CharacterBase character)
         {
-            if (ModelState.IsValid)
-            {
-                
-            }
-
-            return BadRequest();
+            await _characterService.AddCharacter(character);
         }
 
         [HttpPatch("{id}")]

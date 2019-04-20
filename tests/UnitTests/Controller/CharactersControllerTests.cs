@@ -5,7 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using API.Models;
+using Bussiness.Models;
 
 namespace UnitTests.Controller
 {
@@ -66,7 +66,7 @@ namespace UnitTests.Controller
         }
 
         [Test]
-        public void should_call_CreateCharacter_from_service()
+        public async Task should_call_CreateCharacter_from_service()
         {
             //given
             var character = new CharacterBase
@@ -78,9 +78,10 @@ namespace UnitTests.Controller
             };
 
             //when
-            _characterController.CreateCharacter(character);
+            await _characterController.AddCharacter(character);
 
             //then
+            _charactersServiceMock.Verify(m => m.AddCharacter(character));
         }
     }
 }

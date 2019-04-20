@@ -1,6 +1,4 @@
-﻿using API.Validation;
-
-namespace API.Models
+﻿namespace Bussiness.Models
 {
     public class CharacterBase
     {

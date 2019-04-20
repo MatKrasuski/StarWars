@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Bussiness.Models;
 using Domain.Dtos;
 using Domain.Repositories;
 using FluentAssertions;
@@ -77,6 +78,27 @@ namespace IntegrationTests.Repositories
 
             //then
             result.Should().BeEquivalentTo(character);
+        }
+
+        [Test]
+        public async Task should_add_character()
+        {
+            //given
+            var character = new CharacterBase
+            {
+                Episodes = new[] { "abc", "gfg" },
+                Planet = "planet",
+                Name = "Luke",
+                Friends = new[] { "f1", "f2" }
+            };
+
+            //when
+            await _characterRepository.AddCharacter(character);
+
+            //then
+            var result = await _characterRepository.GetAllCharacters();
+
+            result.Should().ContainEquivalentOf(character);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using API.Models;
+using Bussiness.Models;
 using Domain.Dtos;
 
 namespace API.Mappers
