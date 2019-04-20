@@ -20,7 +20,6 @@ namespace UnitTests.Attributes
         [TestCase("abc")]
         [TestCase("@#$%")]
         [TestCase("dasdadasdasdasdasdasdcdc")]
-        [TestCase("123745348237234428734233")]
         [TestCase("234jfvf342384chfbdf233cd")]
         [TestCase("234$%(#Asdnajsd5345&$sk23")]
         public void should_return_bad_request_when_id_is_in_wrong_format(string value)
