@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace API.Validation
 {
-    internal class ValidateIdFormatAttribute : ActionFilterAttribute
+    public class ValidateIdFormatAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
