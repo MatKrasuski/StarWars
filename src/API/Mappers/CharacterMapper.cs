@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using API.Models;
 using Domain.Dtos;
 
@@ -14,7 +15,7 @@ namespace API.Mappers
             {
                 var character = new  Character
                 {
-                    Id = characterDto.Id,
+                    Id = characterDto.Id.ToString(),
                     Episodes = characterDto.Episodes,
                     Planet = characterDto.Planet,
                     Name = characterDto.Name,
@@ -35,7 +36,7 @@ namespace API.Mappers
                 Name = characterDto.Name,
                 Planet = characterDto.Planet,
                 Episodes = characterDto.Episodes,
-                Id = characterDto.Id
+                Id = characterDto.Id.ToString()
             };
         }
     }

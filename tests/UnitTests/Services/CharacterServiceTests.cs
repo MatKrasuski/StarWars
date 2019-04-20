@@ -5,6 +5,7 @@ using API.Services;
 using Domain.Dtos;
 using Domain.Interfaces;
 using FluentAssertions;
+using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace UnitTests.Services
 
             //Setups
             _characterRepositoryMock.Setup(m => m.GetAllCharacters()).Returns(new List<CharacterDto>());
-            _characterRepositoryMock.Setup(m => m.GetCharacter(It.IsAny<int>())).Returns(new CharacterDto());
+            _characterRepositoryMock.Setup(m => m.GetCharacter(It.IsAny<string>())).Returns(new CharacterDto());
         }
 
         [Test]
@@ -46,10 +47,10 @@ namespace UnitTests.Services
         {
             //given
             //when
-            _characterService.GetCharacter(It.IsAny<int>());
+            _characterService.GetCharacter(It.IsAny<string>());
 
             //then
-            _characterRepositoryMock.Verify(m => m.GetCharacter(It.IsAny<int>()));
+            _characterRepositoryMock.Verify(m => m.GetCharacter(It.IsAny<string>()));
         }
 
         [Test]
@@ -68,7 +69,7 @@ namespace UnitTests.Services
         {
             //given
             //when
-            _characterService.GetCharacter(It.IsAny<int>());
+            _characterService.GetCharacter(It.IsAny<string>());
 
             //then
             _characterMapperMock.Verify(m => m.MapSingleCharacter(It.IsAny<CharacterDto>()));
@@ -94,7 +95,7 @@ namespace UnitTests.Services
         public void should_return_single_character()
         {
             //given
-            var characterId = 1;
+            var characterId = "123";
             var characterDto = new CharacterDto();
 
             _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).Returns(characterDto);
@@ -111,7 +112,7 @@ namespace UnitTests.Services
         public void should_return_null_character_when_repository_returns_null()
         {
             //given
-            var characterId = 123;
+            var characterId = "123";
 
             _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).Returns((CharacterDto)null);
 

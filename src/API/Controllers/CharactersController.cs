@@ -1,5 +1,7 @@
-﻿using API.Services;
+﻿using API.Models;
+using API.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace API.Controllers
 {
@@ -15,15 +17,22 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public JsonResult Get()
+        public ActionResult Get()
         {
             return new JsonResult(_characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]
-        public JsonResult Get(int id)
+        public ActionResult Get(string id)
         {
-            return new JsonResult(_characterService.GetCharacter(id));
+            var character = _characterService.GetCharacter(id);
+
+            if (character is NullCharacter)
+            {
+                return NoContent();
+            }
+
+            return new JsonResult(character);
         }
 
         [HttpPost]

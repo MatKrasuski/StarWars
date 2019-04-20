@@ -1,48 +1,41 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Domain.Dtos;
 using Domain.Interfaces;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Domain.Repositories
 {
-    class CharacterRepository : ICharacterRepository
+    public class CharacterRepository : ICharacterRepository
     {
+        private readonly IMongoClient _mongoClient;
+        private readonly IMongoDatabase _database;
+        private readonly string _dbName = "StarWars";
+        private readonly string _collection = "characters";
+
+        public CharacterRepository(IMongoClient mongoClient)
+        {
+            _mongoClient = mongoClient;
+            _database = _mongoClient.GetDatabase(_dbName);
+        }
+
+        //Constructor for integration tests
+        public CharacterRepository(IMongoClient mongoClient, string database, string collectionName) : this(mongoClient)
+        {
+            _database = _mongoClient.GetDatabase(database);
+            _collection = collectionName;
+        }
+
         public List<CharacterDto> GetAllCharacters()
         {
-            return Characters;
+            var collection = _database.GetCollection<CharacterDto>(_collection);
+            return collection.Find(FilterDefinition<CharacterDto>.Empty).ToList();
         }
 
-        public CharacterDto GetCharacter(int characterId)
+        public CharacterDto GetCharacter(string characterId)
         {
-            return Characters.FirstOrDefault(c => c.Id == characterId);
+            var collection = _database.GetCollection<CharacterDto>(_collection);
+            return collection.Find(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId))).FirstOrDefault();
         }
-
-        List<CharacterDto> Characters => new List<CharacterDto>
-        {
-            new CharacterDto
-            {
-                Id = 1,
-                Name = "Luke",
-                Episodes = new[]{ "NEWHOPE", "EMPIRE", "JEDI" },
-                Planet = "Tatooine",
-                Friends = new[]{ "Han Solo", "Leia Organa", "C - 3PO", "R2 - D2" }
-            },
-
-            new CharacterDto
-            {
-                Id = 2,
-                Name = "Darth Vader",
-                Episodes = new[]{ "NEWHOPE", "EMPIRE", "JEDI" },
-                Friends = new[]{ "Wilhuff Tarkin" }
-            },
-
-            new CharacterDto
-            {
-                Id = 3,
-                Name = "Han Solo",
-                Episodes = new[]{ "NEWHOPE", "EMPIRE", "JEDI" },
-                Friends = new[]{ "Luke Skywalker", "Leia Organa", "R2-D2" }
-            },
-        };
     }
 }

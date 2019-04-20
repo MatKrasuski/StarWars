@@ -1,10 +1,11 @@
 using API.Controllers;
-using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using API.Models;
+using MongoDB.Bson;
 
 namespace UnitTests.Controller
 {
@@ -40,7 +41,7 @@ namespace UnitTests.Controller
         public void should_call_GetCharacter_from_character_service()
         {
             //given
-            var id = 1;
+            var id = "123";
             //when
             var result = _characterController.Get(id);
 
@@ -48,5 +49,21 @@ namespace UnitTests.Controller
             _charactersServiceMock.Verify(m => m.GetCharacter(id));
             Assert.IsInstanceOf<JsonResult>(result);
         }
+
+        [Test]
+        public void should_return_no_content_if_service_returns_NullCandidate()
+        {
+            //given
+            var id = "123";
+
+            _charactersServiceMock.Setup(m => m.GetCharacter(id)).Returns(new NullCharacter());
+
+            //when
+            var result = _characterController.Get(id);
+
+            //then
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
+
     }
 }

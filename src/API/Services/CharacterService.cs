@@ -1,7 +1,8 @@
-﻿using API.Models;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
 using System.Collections.Generic;
 using API.Mappers;
+using API.Models;
+using MongoDB.Bson;
 
 namespace API.Services
 {
@@ -22,13 +23,13 @@ namespace API.Services
             return _characterMapper.MapCharacters(charactersDto);
         }
 
-        public Character GetCharacter(int characterId)
+        public Character GetCharacter(string characterId)
         {
             var characterDto = _characterRepository.GetCharacter(characterId);
 
             if (characterDto == null)
             {
-                return new NullCharacter{Id = characterId};
+                return new NullCharacter();
             }
 
             return _characterMapper.MapSingleCharacter(characterDto);
