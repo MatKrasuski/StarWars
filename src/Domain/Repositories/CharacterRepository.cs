@@ -51,5 +51,11 @@ namespace Domain.Repositories
             var collection = _database.GetCollection<CharacterBase>(_collection);
             await collection.ReplaceOneAsync(Builders<CharacterBase>.Filter.Eq("_id", ObjectId.Parse(characterId)), character);
         }
+
+        public async Task DeleteCharacter(string characterId)
+        {
+            var collection = _database.GetCollection<CharacterDto>(_collection);
+            await collection.DeleteOneAsync(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId)));
+        }
     }
 }

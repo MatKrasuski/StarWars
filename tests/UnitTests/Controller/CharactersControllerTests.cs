@@ -91,5 +91,18 @@ namespace UnitTests.Controller
             //then
             _charactersServiceMock.Verify(m => m.UpdateCharacter(id, character));
         }
+
+        [Test]
+        public async Task should_call_DeleteCharacter_from_service()
+        {
+            //given
+            var id = "123";
+
+            //when
+            await _characterController.Delete(id);
+
+            //then
+            _charactersServiceMock.Verify(m => m.DeleteCharacter(id));
+        }
     }
 }

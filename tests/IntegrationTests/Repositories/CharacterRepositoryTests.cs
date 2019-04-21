@@ -134,5 +134,32 @@ namespace IntegrationTests.Repositories
 
             result.Should().BeEquivalentTo(characterToUpdate);
         }
+
+        [Test]
+        public async Task should_Delete_character()
+        {
+            //given
+            var id = ObjectId.GenerateNewId().ToString();
+
+            var character = new Character
+            {
+                Id = id,
+                Episodes = new[] { "abc", "gfg" },
+                Planet = "planet",
+                Name = "Luke",
+                Friends = new[] { "f1", "f2" }
+            };
+
+            var collection = Db.GetCollection<Character>(CharactersCollection);
+            collection.InsertOne(character);
+
+            //when
+            await _characterRepository.DeleteCharacter(id);
+
+            //then
+            var result = await _characterRepository.GetCharacter(id);
+
+            result.Should().BeNull();
+        }
     }
 }

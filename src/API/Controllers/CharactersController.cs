@@ -52,8 +52,9 @@ namespace API.Controllers
 
         [ValidateIdFormat]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(string id)
         {
+            await _characterService.DeleteCharacter(id);
         }
     }
 }

@@ -44,5 +44,10 @@ namespace API.Services
         {
             await _characterRepository.UpdateCharacter(id, character);
         }
+
+        public async Task DeleteCharacter(string id)
+        {
+            await _characterRepository.DeleteCharacter(id);
+        }
     }
 }
