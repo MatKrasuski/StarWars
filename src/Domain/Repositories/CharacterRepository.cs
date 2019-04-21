@@ -45,5 +45,11 @@ namespace Domain.Repositories
             var collection = _database.GetCollection<CharacterBase>(_collection);
             await collection.InsertOneAsync(character);
         }
+
+        public async Task UpdateCharacter(string characterId, CharacterBase character)
+        {
+            var collection = _database.GetCollection<CharacterBase>(_collection);
+            await collection.ReplaceOneAsync(Builders<CharacterBase>.Filter.Eq("_id", ObjectId.Parse(characterId)), character);
+        }
     }
 }

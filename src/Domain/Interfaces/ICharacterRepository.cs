@@ -10,5 +10,6 @@ namespace Domain.Interfaces
         Task<List<CharacterDto>> GetAllCharacters();
         Task<CharacterDto> GetCharacter(string characterId);
         Task AddCharacter(CharacterBase character);
+        Task UpdateCharacter(string characterId, CharacterBase character);
     }
 }

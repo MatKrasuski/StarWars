@@ -66,22 +66,30 @@ namespace UnitTests.Controller
         }
 
         [Test]
-        public async Task should_call_CreateCharacter_from_service()
+        public async Task should_call_AddCharacter_from_service()
         {
             //given
-            var character = new CharacterBase
-            {
-                Name = "luke",
-                Planet = "Tatooine",
-                Episodes = new []{"ep 1", "ep 2"},
-                Friends = new[] {"friend 1", "friend 2"}
-            };
+            var character = new CharacterBase();
 
             //when
-            await _characterController.AddCharacter(character);
+            await _characterController.Add(character);
 
             //then
             _charactersServiceMock.Verify(m => m.AddCharacter(character));
+        }
+
+        [Test]
+        public async Task should_call_UpdateCharacter_from_service()
+        {
+            //given
+            var id = "123";
+            var character = new CharacterBase();
+
+            //when
+            await _characterController.Update(id, character);
+
+            //then
+            _charactersServiceMock.Verify(m => m.UpdateCharacter(id, character));
         }
     }
 }

@@ -39,5 +39,10 @@ namespace API.Services
         {
             await _characterRepository.AddCharacter(character);
         }
+
+        public async  Task UpdateCharacter(string id, CharacterBase character)
+        {
+            await _characterRepository.UpdateCharacter(id, character);
+        }
     }
 }

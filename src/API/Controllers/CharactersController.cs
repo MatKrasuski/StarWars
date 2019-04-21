@@ -38,16 +38,19 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task AddCharacter([FromBody] CharacterBase character)
+        public async Task Add([FromBody] CharacterBase character)
         {
             await _characterService.AddCharacter(character);
         }
 
-        [HttpPatch("{id}")]
-        public void Update(int id, [FromBody] string value)
+        [ValidateIdFormat]
+        [HttpPut("{id}")]
+        public async Task Update(string id, [FromBody] CharacterBase character)
         {
+            await _characterService.UpdateCharacter(id, character);
         }
 
+        [ValidateIdFormat]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

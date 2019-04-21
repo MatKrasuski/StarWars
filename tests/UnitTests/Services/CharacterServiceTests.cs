@@ -135,5 +135,19 @@ namespace UnitTests.Services
             //then
             _characterRepositoryMock.Verify(m => m.AddCharacter(character));
         }
+
+        [Test]
+        public async Task should_call_character_repository_UpdateCharacter()
+        {
+            //given
+            var id = "123";
+            var character = new CharacterBase();
+
+            //when
+            await _characterService.UpdateCharacter(id, character);
+
+            //then
+            _characterRepositoryMock.Verify(m => m.UpdateCharacter(id, character));
+        }
     }
 }

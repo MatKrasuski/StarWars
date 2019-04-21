@@ -100,5 +100,39 @@ namespace IntegrationTests.Repositories
 
             result.Should().ContainEquivalentOf(character);
         }
+
+        [Test]
+        public async Task should_Update_character()
+        {
+            //given
+            var id = ObjectId.GenerateNewId().ToString();
+
+            var character = new Character
+            {
+                Id = id,
+                Episodes = new[] { "abc", "gfg" },
+                Planet = "planet",
+                Name = "Luke",
+                Friends = new[] { "f1", "f2" }
+            };
+
+            var characterToUpdate = new CharacterBase
+            {
+                Episodes = new[] { "NEWHOPE", "EMPIRE", "JEDI" },
+                Name = "Luke",
+                Friends = new[] { "Han Solo", "Leia Organa", "C-3PO", "R2-D2" }
+            };
+
+            var collection = Db.GetCollection<Character>(CharactersCollection);
+            collection.InsertOne(character);
+
+            //when
+            await _characterRepository.UpdateCharacter(id, characterToUpdate);
+
+            //then
+            var result = await _characterRepository.GetCharacter(id);
+
+            result.Should().BeEquivalentTo(characterToUpdate);
+        }
     }
 }
