@@ -35,9 +35,9 @@ namespace API.Services
             return _characterMapper.MapSingleCharacter(characterDto);
         }
 
-        public async Task AddCharacter(CharacterBase character)
+        public async Task AddCharacters(List<CharacterBase> character)
         {
-            await _characterRepository.AddCharacter(character);
+            await _characterRepository.AddCharacters(character);
         }
 
         public async  Task UpdateCharacter(string id, CharacterBase character)

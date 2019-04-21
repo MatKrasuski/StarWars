@@ -69,13 +69,13 @@ namespace UnitTests.Controller
         public async Task should_call_AddCharacter_from_service()
         {
             //given
-            var character = new CharacterBase();
+            var character = new List<CharacterBase> {new CharacterBase()};
 
             //when
             await _characterController.Add(character);
 
             //then
-            _charactersServiceMock.Verify(m => m.AddCharacter(character));
+            _charactersServiceMock.Verify(m => m.AddCharacters(character));
         }
 
         [Test]

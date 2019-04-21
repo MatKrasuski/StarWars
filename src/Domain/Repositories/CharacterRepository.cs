@@ -40,10 +40,10 @@ namespace Domain.Repositories
             return (await collection.FindAsync(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId)))).FirstOrDefault();
         }
 
-        public async Task AddCharacter(CharacterBase character)
+        public async Task AddCharacters(List<CharacterBase> character)
         {
             var collection = _database.GetCollection<CharacterBase>(_collection);
-            await collection.InsertOneAsync(character);
+            await collection.InsertManyAsync(character);
         }
 
         public async Task UpdateCharacter(string characterId, CharacterBase character)

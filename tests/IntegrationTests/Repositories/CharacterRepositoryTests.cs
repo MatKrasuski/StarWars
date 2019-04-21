@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Bussiness.Models;
 using Domain.Dtos;
@@ -64,10 +66,10 @@ namespace IntegrationTests.Repositories
             var character = new CharacterDto
             {
                 Id = characterId,
-                Episodes = new[] {"abc", "gfg"},
+                Episodes = new[] { "abc", "gfg" },
                 Planet = "planet",
                 Name = "Luke",
-                Friends = new[] {"f1", "f2"}
+                Friends = new[] { "f1", "f2" }
             };
 
             var collection = Db.GetCollection<CharacterDto>(CharactersCollection);
@@ -81,24 +83,36 @@ namespace IntegrationTests.Repositories
         }
 
         [Test]
-        public async Task should_add_character()
+        public async Task should_add_characters()
         {
             //given
-            var character = new CharacterBase
+            var characters = new List<CharacterBase>
             {
-                Episodes = new[] { "abc", "gfg" },
-                Planet = "planet",
-                Name = "Luke",
-                Friends = new[] { "f1", "f2" }
+                new CharacterBase
+                {
+                    Episodes = new[] {"abc", "gfg"},
+                    Planet = "planet",
+                    Name = "Luke",
+                    Friends = new[] {"f1", "f2"}
+                },
+
+                new CharacterBase
+                {
+                    Episodes = new[] {"nnn", "www"},
+                    Planet = "moon",
+                    Name = "Vader",
+                    Friends = new[] {"f0"}
+                }
             };
 
             //when
-            await _characterRepository.AddCharacter(character);
+            await _characterRepository.AddCharacters(characters);
 
             //then
             var result = await _characterRepository.GetAllCharacters();
 
-            result.Should().ContainEquivalentOf(character);
+            result.Should().ContainEquivalentOf(characters[0]);
+            result.Should().ContainEquivalentOf(characters[1]);
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using API.Services;
 using API.Validation;
 using Bussiness.Models;
@@ -38,9 +39,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task Add([FromBody] CharacterBase character)
+        public async Task Add([FromBody] List<CharacterBase> character)
         {
-            await _characterService.AddCharacter(character);
+            await _characterService.AddCharacters(character);
         }
 
         [ValidateIdFormat]

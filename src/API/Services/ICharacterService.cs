@@ -8,7 +8,7 @@ namespace API.Services
     {
         Task<List<Character>> GetAllCharacters();
         Task<Character> GetCharacter(string characterId);
-        Task AddCharacter(CharacterBase character);
+        Task AddCharacters(List<CharacterBase> character);
         Task UpdateCharacter(string id, CharacterBase character);
         Task DeleteCharacter(string id);
     }

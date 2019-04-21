@@ -127,13 +127,13 @@ namespace UnitTests.Services
         public async Task should_call_character_repository_AddCharacter()
         {
             //given
-            var character = new CharacterBase();
+            var character = new List<CharacterBase>{new CharacterBase()};
 
             //when
-            await _characterService.AddCharacter(character);
+            await _characterService.AddCharacters(character);
 
             //then
-            _characterRepositoryMock.Verify(m => m.AddCharacter(character));
+            _characterRepositoryMock.Verify(m => m.AddCharacters(character));
         }
 
         [Test]
