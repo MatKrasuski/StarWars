@@ -86,9 +86,9 @@ namespace IntegrationTests.Repositories
         public async Task should_add_characters()
         {
             //given
-            var characters = new List<CharacterBase>
+            var characters = new List<Character>
             {
-                new CharacterBase
+                new Character
                 {
                     Episodes = new[] {"abc", "gfg"},
                     Planet = "planet",
@@ -96,7 +96,7 @@ namespace IntegrationTests.Repositories
                     Friends = new[] {"f1", "f2"}
                 },
 
-                new CharacterBase
+                new Character
                 {
                     Episodes = new[] {"nnn", "www"},
                     Planet = "moon",
@@ -121,7 +121,7 @@ namespace IntegrationTests.Repositories
             //given
             var id = ObjectId.GenerateNewId().ToString();
 
-            var character = new Character
+            var character = new CharacterBase
             {
                 Id = id,
                 Episodes = new[] { "abc", "gfg" },
@@ -130,14 +130,14 @@ namespace IntegrationTests.Repositories
                 Friends = new[] { "f1", "f2" }
             };
 
-            var characterToUpdate = new CharacterBase
+            var characterToUpdate = new Character
             {
                 Episodes = new[] { "NEWHOPE", "EMPIRE", "JEDI" },
                 Name = "Luke",
                 Friends = new[] { "Han Solo", "Leia Organa", "C-3PO", "R2-D2" }
             };
 
-            var collection = Db.GetCollection<Character>(CharactersCollection);
+            var collection = Db.GetCollection<CharacterBase>(CharactersCollection);
             collection.InsertOne(character);
 
             //when
@@ -155,7 +155,7 @@ namespace IntegrationTests.Repositories
             //given
             var id = ObjectId.GenerateNewId().ToString();
 
-            var character = new Character
+            var character = new CharacterBase
             {
                 Id = id,
                 Episodes = new[] { "abc", "gfg" },
@@ -164,7 +164,7 @@ namespace IntegrationTests.Repositories
                 Friends = new[] { "f1", "f2" }
             };
 
-            var collection = Db.GetCollection<Character>(CharactersCollection);
+            var collection = Db.GetCollection<CharacterBase>(CharactersCollection);
             collection.InsertOne(character);
 
             //when

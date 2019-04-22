@@ -82,13 +82,13 @@ namespace UnitTests.Services
             var charactersDto = new List<CharacterDto>();
 
             _characterRepositoryMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(charactersDto);
-            _characterMapperMock.Setup(m => m.MapCharacters(charactersDto)).Returns(new List<Character>());
+            _characterMapperMock.Setup(m => m.MapCharacters(charactersDto)).Returns(new List<CharacterBase>());
 
             //when
             var result = await _characterService.GetAllCharacters();
 
             //then
-            Assert.IsInstanceOf<List<Character>>(result);
+            Assert.IsInstanceOf<List<CharacterBase>>(result);
         }
 
         [Test]
@@ -99,13 +99,13 @@ namespace UnitTests.Services
             var characterDto = new CharacterDto();
 
             _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync(characterDto);
-            _characterMapperMock.Setup(m => m.MapSingleCharacter(characterDto)).Returns(new Character());
+            _characterMapperMock.Setup(m => m.MapSingleCharacter(characterDto)).Returns(new CharacterBase());
 
             //when
             var result = await _characterService.GetCharacter(characterId);
 
             //then
-            Assert.IsInstanceOf<Character>(result);
+            Assert.IsInstanceOf<CharacterBase>(result);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace UnitTests.Services
         public async Task should_call_character_repository_AddCharacter()
         {
             //given
-            var character = new List<CharacterBase>{new CharacterBase()};
+            var character = new List<Character>{new Character()};
 
             //when
             await _characterService.AddCharacters(character);
@@ -141,7 +141,7 @@ namespace UnitTests.Services
         {
             //given
             var id = "123";
-            var character = new CharacterBase();
+            var character = new Character();
 
             //when
             await _characterService.UpdateCharacter(id, character);

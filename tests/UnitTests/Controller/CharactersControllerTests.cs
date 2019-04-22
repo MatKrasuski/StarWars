@@ -22,7 +22,7 @@ namespace UnitTests.Controller
             _characterController = new CharactersController(_charactersServiceMock.Object);
 
             // Setups
-            _charactersServiceMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new List<Character>());
+            _charactersServiceMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new List<CharacterBase>());
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace UnitTests.Controller
         public async Task should_call_AddCharacter_from_service()
         {
             //given
-            var character = new List<CharacterBase> {new CharacterBase()};
+            var character = new List<Character> {new Character()};
 
             //when
             await _characterController.Add(character);
@@ -83,7 +83,7 @@ namespace UnitTests.Controller
         {
             //given
             var id = "123";
-            var character = new CharacterBase();
+            var character = new Character();
 
             //when
             await _characterController.Update(id, character);

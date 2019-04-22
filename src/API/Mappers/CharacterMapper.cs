@@ -6,13 +6,13 @@ namespace API.Mappers
 {
     public class CharacterMapper : ICharacterMapper
     {
-        public List<Character> MapCharacters(List<CharacterDto> charactersDto)
+        public List<CharacterBase> MapCharacters(List<CharacterDto> charactersDto)
         {
-            var characters = new List<Character>();
+            var characters = new List<CharacterBase>();
 
             foreach (var characterDto in charactersDto)
             {
-                var character = new  Character
+                var character = new  CharacterBase
                 {
                     Id = characterDto.Id.ToString(),
                     Episodes = characterDto.Episodes,
@@ -27,9 +27,9 @@ namespace API.Mappers
             return characters;
         }
 
-        public Character MapSingleCharacter(CharacterDto characterDto)
+        public CharacterBase MapSingleCharacter(CharacterDto characterDto)
         {
-            return  new Character
+            return  new CharacterBase
             {
                 Friends = characterDto.Friends,
                 Name = characterDto.Name,
