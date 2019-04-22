@@ -1,14 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace Bussiness.Models
+﻿namespace Bussiness.Models
 {
-    public class Character : CharacterBase
+    public class Character
     {
-        [BsonId]
-        [BsonElement("id")]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        
+        public string Name { get; set; }
+        public string[] Episodes { get; set; }
+        public string Planet { get; set; }
+        public string[] Friends { get; set; }
     }
 }

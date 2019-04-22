@@ -6,7 +6,7 @@ namespace API.Mappers
 {
     public interface ICharacterMapper
     {
-        List<Character> MapCharacters(List<CharacterDto> charactersDto);
-        Character MapSingleCharacter(CharacterDto characterDto);
+        List<CharacterBase> MapCharacters(List<CharacterDto> charactersDto);
+        CharacterBase MapSingleCharacter(CharacterDto characterDto);
     }
 }

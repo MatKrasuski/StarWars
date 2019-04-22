@@ -6,10 +6,10 @@ namespace API.Services
 {
     public interface ICharacterService
     {
-        Task<List<Character>> GetAllCharacters();
-        Task<Character> GetCharacter(string characterId);
-        Task AddCharacters(List<CharacterBase> character);
-        Task UpdateCharacter(string id, CharacterBase character);
+        Task<List<CharacterBase>> GetAllCharacters();
+        Task<CharacterBase> GetCharacter(string characterId);
+        Task AddCharacters(List<Character> character);
+        Task UpdateCharacter(string id, Character character);
         Task DeleteCharacter(string id);
     }
 }

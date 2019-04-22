@@ -40,16 +40,16 @@ namespace Domain.Repositories
             return (await collection.FindAsync(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId)))).FirstOrDefault();
         }
 
-        public async Task AddCharacters(List<CharacterBase> character)
+        public async Task AddCharacters(List<Character> character)
         {
-            var collection = _database.GetCollection<CharacterBase>(_collection);
+            var collection = _database.GetCollection<Character>(_collection);
             await collection.InsertManyAsync(character);
         }
 
-        public async Task UpdateCharacter(string characterId, CharacterBase character)
+        public async Task UpdateCharacter(string characterId, Character character)
         {
-            var collection = _database.GetCollection<CharacterBase>(_collection);
-            await collection.ReplaceOneAsync(Builders<CharacterBase>.Filter.Eq("_id", ObjectId.Parse(characterId)), character);
+            var collection = _database.GetCollection<Character>(_collection);
+            await collection.ReplaceOneAsync(Builders<Character>.Filter.Eq("_id", ObjectId.Parse(characterId)), character);
         }
 
         public async Task DeleteCharacter(string characterId)
