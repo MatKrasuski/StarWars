@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Bussiness.Models;
 using Domain.Dtos;
 
@@ -14,11 +15,11 @@ namespace API.Mappers
             {
                 var character = new  CharacterBase
                 {
-                    Id = characterDto.Id.ToString(),
-                    Episodes = characterDto.Episodes,
+                    Id = characterDto.CharacterId,
+                    Episodes = characterDto.Episodes.Split(',').ToArray(),
                     Planet = characterDto.Planet,
-                    Name = characterDto.Name,
-                    Friends = characterDto.Friends
+                    CharacterName = characterDto.CharacterName,
+                    Friends = characterDto.Friends.Split(',').ToArray()
                 };
 
                 characters.Add(character);
@@ -31,11 +32,11 @@ namespace API.Mappers
         {
             return  new CharacterBase
             {
-                Friends = characterDto.Friends,
-                Name = characterDto.Name,
+                Friends = characterDto.Friends.Split(',').ToArray(),
+                CharacterName = characterDto.CharacterName,
                 Planet = characterDto.Planet,
-                Episodes = characterDto.Episodes,
-                Id = characterDto.Id.ToString()
+                Episodes = characterDto.Episodes.Split(',').ToArray(),
+                Id = characterDto.CharacterId
             };
         }
     }

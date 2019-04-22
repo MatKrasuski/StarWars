@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using API.Mappers;
 using Domain.Dtos;
-using MongoDB.Bson;
 using NUnit.Framework;
 
 namespace UnitTests.Mappers
@@ -25,18 +25,18 @@ namespace UnitTests.Mappers
             {
                 new CharacterDto
                 {
-                    Id = ObjectId.GenerateNewId(),
-                    Episodes = new []{"ep1", "ep2"},
-                    Friends = new []{"friend1", "friend2"},
-                    Name = "name",
+                    CharacterId = 1,
+                    Episodes = "ep1, ep2",
+                    Friends = "friend1, friend2",
+                    CharacterName = "name",
                     Planet = "planet"
                 },
                 new CharacterDto
                 {
-                    Id = ObjectId.GenerateNewId(),
-                    Episodes = new []{"ep4", "ep5"},
-                    Friends = new []{"friend55", "friend222"},
-                    Name = "nameName"
+                    CharacterId =2,
+                    Episodes = "ep4, ep5",
+                    Friends = "friend55, friend222",
+                    CharacterName = "nameName"
                 }
             };
 
@@ -44,16 +44,16 @@ namespace UnitTests.Mappers
             var output = _characterMapper.MapCharacters(input);
 
             //then
-            Assert.AreEqual(input[0].Id.ToString(), output[0].Id);
-            Assert.AreEqual(input[0].Episodes, output[0].Episodes);
-            Assert.AreEqual(input[0].Friends, output[0].Friends);
-            Assert.AreEqual(input[0].Name, output[0].Name);
+            Assert.AreEqual(input[0].CharacterId, output[0].Id);
+            Assert.AreEqual(input[0].Episodes.Split(',').ToArray(), output[0].Episodes);
+            Assert.AreEqual(input[0].Friends.Split(',').ToArray(), output[0].Friends);
+            Assert.AreEqual(input[0].CharacterName, output[0].CharacterName);
             Assert.AreEqual(input[0].Planet, output[0].Planet);
 
-            Assert.AreEqual(input[1].Id.ToString(), output[1].Id);
-            Assert.AreEqual(input[1].Episodes, output[1].Episodes);
-            Assert.AreEqual(input[1].Friends, output[1].Friends);
-            Assert.AreEqual(input[1].Name, output[1].Name);
+            Assert.AreEqual(input[1].CharacterId, output[1].Id);
+            Assert.AreEqual(input[1].Episodes.Split(',').ToArray(), output[1].Episodes);
+            Assert.AreEqual(input[1].Friends.Split(',').ToArray(), output[1].Friends);
+            Assert.AreEqual(input[1].CharacterName, output[1].CharacterName);
             Assert.AreEqual(input[1].Planet, output[1].Planet);
 
         }
@@ -64,10 +64,10 @@ namespace UnitTests.Mappers
             //given
             var input = new CharacterDto
             {
-                Id = ObjectId.GenerateNewId(),
-                Episodes = new[] {"ep4", "ep5"},
-                Friends = new[] {"friend55", "friend222"},
-                Name = "nameName",
+                CharacterId = 1,
+                Episodes = "ep4, ep5" ,
+                Friends = "friend55, friend222",
+                CharacterName = "nameName",
                 Planet = "moon"
             };
 
@@ -75,10 +75,10 @@ namespace UnitTests.Mappers
             var output = _characterMapper.MapSingleCharacter(input);
 
             //then
-            Assert.AreEqual(input.Id.ToString(), output.Id);
-            Assert.AreEqual(input.Episodes, output.Episodes);
-            Assert.AreEqual(input.Friends, output.Friends);
-            Assert.AreEqual(input.Name, output.Name);
+            Assert.AreEqual(input.CharacterId, output.Id);
+            Assert.AreEqual(input.Episodes.Split(',').ToArray(), output.Episodes);
+            Assert.AreEqual(input.Friends.Split(',').ToArray(), output.Friends);
+            Assert.AreEqual(input.CharacterName, output.CharacterName);
             Assert.AreEqual(input.Planet, output.Planet);
         }
     }

@@ -28,7 +28,7 @@ namespace UnitTests.Services
 
             //Setups
             _characterRepositoryMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new List<CharacterDto>());
-            _characterRepositoryMock.Setup(m => m.GetCharacter(It.IsAny<string>())).ReturnsAsync(new CharacterDto());
+            _characterRepositoryMock.Setup(m => m.GetCharacter(It.IsAny<int>())).ReturnsAsync(new CharacterDto());
         }
 
         [Test]
@@ -47,10 +47,10 @@ namespace UnitTests.Services
         {
             //given
             //when
-            await _characterService.GetCharacter(It.IsAny<string>());
+            await _characterService.GetCharacter(It.IsAny<int>());
 
             //then
-            _characterRepositoryMock.Verify(m => m.GetCharacter(It.IsAny<string>()));
+            _characterRepositoryMock.Verify(m => m.GetCharacter(It.IsAny<int>()));
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace UnitTests.Services
         {
             //given
             //when
-            await _characterService.GetCharacter(It.IsAny<string>());
+            await _characterService.GetCharacter(It.IsAny<int>());
 
             //then
             _characterMapperMock.Verify(m => m.MapSingleCharacter(It.IsAny<CharacterDto>()));
@@ -95,7 +95,7 @@ namespace UnitTests.Services
         public async Task should_return_single_character()
         {
             //given
-            var characterId = "123";
+            var characterId = 123;
             var characterDto = new CharacterDto();
 
             _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync(characterDto);
@@ -112,7 +112,7 @@ namespace UnitTests.Services
         public async Task should_return_null_character_when_repository_returns_null()
         {
             //given
-            var characterId = "123";
+            var characterId = 123;
 
             _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync((CharacterDto)null);
 
@@ -140,7 +140,7 @@ namespace UnitTests.Services
         public async Task should_call_character_repository_UpdateCharacter()
         {
             //given
-            var id = "123";
+            var id = 123;
             var character = new Character();
 
             //when
@@ -154,7 +154,7 @@ namespace UnitTests.Services
         public async Task should_call_character_repository_DeleteCharacter()
         {
             //given
-            var id = "123";
+            var id = 123;
 
             //when
             await _characterService.DeleteCharacter(id);

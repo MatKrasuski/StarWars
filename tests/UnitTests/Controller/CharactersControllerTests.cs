@@ -41,7 +41,7 @@ namespace UnitTests.Controller
         public async Task should_call_GetCharacter_from_character_service()
         {
             //given
-            var id = "123";
+            var id = 123;
             //when
             var result = await _characterController.Get(id);
 
@@ -54,7 +54,7 @@ namespace UnitTests.Controller
         public async Task should_return_no_content_if_service_returns_NullCandidate()
         {
             //given
-            var id = "123";
+            var id = 123;
 
             _charactersServiceMock.Setup(m => m.GetCharacter(id)).ReturnsAsync(new NullCharacter());
 
@@ -82,7 +82,7 @@ namespace UnitTests.Controller
         public async Task should_call_UpdateCharacter_from_service()
         {
             //given
-            var id = "123";
+            var id = 123;
             var character = new Character();
 
             //when
@@ -96,7 +96,7 @@ namespace UnitTests.Controller
         public async Task should_call_DeleteCharacter_from_service()
         {
             //given
-            var id = "123";
+            var id = 123;
 
             //when
             await _characterController.Delete(id);

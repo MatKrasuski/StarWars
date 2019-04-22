@@ -26,7 +26,7 @@ namespace API.Controllers
 
         [ValidateIdFormat]
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(string id)
+        public async Task<ActionResult> Get(int id)
         {
             var character = await _characterService.GetCharacter(id);
 
@@ -46,14 +46,14 @@ namespace API.Controllers
 
         [ValidateIdFormat]
         [HttpPut("{id}")]
-        public async Task Update(string id, [FromBody] Character character)
+        public async Task Update(int id, [FromBody] Character character)
         {
             await _characterService.UpdateCharacter(id, character);
         }
 
         [ValidateIdFormat]
         [HttpDelete("{id}")]
-        public async Task Delete(string id)
+        public async Task Delete(int id)
         {
             await _characterService.DeleteCharacter(id);
         }

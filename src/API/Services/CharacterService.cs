@@ -23,7 +23,7 @@ namespace API.Services
             return _characterMapper.MapCharacters(charactersDto);
         }
 
-        public async Task<CharacterBase> GetCharacter(string characterId)
+        public async Task<CharacterBase> GetCharacter(int characterId)
         {
             var characterDto =  await _characterRepository.GetCharacter(characterId);
 
@@ -40,12 +40,12 @@ namespace API.Services
             await _characterRepository.AddCharacters(character);
         }
 
-        public async  Task UpdateCharacter(string id, Character character)
+        public async  Task UpdateCharacter(int id, Character character)
         {
             await _characterRepository.UpdateCharacter(id, character);
         }
 
-        public async Task DeleteCharacter(string id)
+        public async Task DeleteCharacter(int id)
         {
             await _characterRepository.DeleteCharacter(id);
         }

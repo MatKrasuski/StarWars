@@ -5,10 +5,7 @@ namespace Bussiness.Models
 {
     public class CharacterBase : Character
     {
-        [BsonId]
-        [BsonElement("id")]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public int Id { get; set; }
         
     }
 }

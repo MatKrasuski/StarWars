@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Bussiness.Models;
 using Domain.Dtos;
 using Domain.Repositories;
 using FluentAssertions;
-using MongoDB.Bson;
 using NUnit.Framework;
 
 namespace IntegrationTests.Repositories
@@ -18,68 +17,72 @@ namespace IntegrationTests.Repositories
         private const string CharactersCollection = "charactersTest";
 
         [OneTimeSetUp]
-        public void SetupOnce()
+        public async Task SetupOnce()
         {
             Db.DropCollection(CharactersCollection);
+            await ClearCharactersTable();
 
-            _characterRepository = new CharacterRepository(MongoClient, DbName, CharactersCollection);
+            _characterRepository = new CharacterRepository(SqlClient);
         }
 
         [Test]
         public async Task should_get_all_characters()
         {
             //given
-            var characters = new List<CharacterDto>
+            await ClearCharactersTable();
+
+            var character1 = new CharacterDto
             {
-                new CharacterDto
-                {
-                    Id = ObjectId.GenerateNewId(),
-                    Episodes = new[] {"abc", "gfg"},
-                    Planet = "planet",
-                    Name = "Luke",
-                    Friends = new []{"f1", "f2"}
-                },
-                new CharacterDto
-                {
-                    Id = ObjectId.GenerateNewId(),
-                    Episodes = new[] {"qqq", "bbb"},
-                    Name = "Lukas",
-                    Friends = new []{"q1", "q2"}
-                }
+                CharacterId = 1,
+                Episodes = "abc, gfg",
+                Planet = "planet",
+                CharacterName = "Luke",
+                Friends = "f1,f2"
             };
 
-            var collection = Db.GetCollection<CharacterDto>(CharactersCollection);
-            collection.InsertMany(characters);
+            var character2 = new CharacterDto
+            {
+                CharacterId = 1,
+                Episodes = "qqq, bbb",
+                CharacterName = "Lukas",
+                Friends = "q1, q2"
+            };
+
+            var characters = new List<CharacterDto>
+            {
+                character1,
+                character2
+            };
+
+            await InsertCharacterDto(character1);
+            await InsertCharacterDto(character2);
 
             //when
             var result = await _characterRepository.GetAllCharacters();
 
             //then
-            result.Should().BeEquivalentTo(characters);
+            result.Should().ContainEquivalentOf(characters[0]);
         }
 
         [Test]
         public async Task should_get_single_character()
         {
             //given
-            var characterId = ObjectId.GenerateNewId();
             var character = new CharacterDto
             {
-                Id = characterId,
-                Episodes = new[] { "abc", "gfg" },
+                Episodes = "abc, gfg",
                 Planet = "planet",
-                Name = "Luke",
-                Friends = new[] { "f1", "f2" }
+                CharacterName = "Luke",
+                Friends = "f1,f2"
             };
 
-            var collection = Db.GetCollection<CharacterDto>(CharactersCollection);
-            collection.InsertOne(character);
+            var insertedCandidateId = await InsertCharacterDto(character);
 
             //when
-            var result = await _characterRepository.GetCharacter(characterId.ToString());
+            var result = await _characterRepository.GetCharacter(insertedCandidateId);
 
             //then
-            result.Should().BeEquivalentTo(character);
+            result.Should().BeEquivalentTo(character, o => o.Excluding(s => s.CharacterId));
         }
 
         [Test]
@@ -90,9 +93,10 @@ namespace IntegrationTests.Repositories
             {
                 new Character
                 {
+                    
                     Episodes = new[] {"abc", "gfg"},
                     Planet = "planet",
-                    Name = "Luke",
+                    CharacterName = "Luke",
                     Friends = new[] {"f1", "f2"}
                 },
 
@@ -100,80 +104,102 @@ namespace IntegrationTests.Repositories
                 {
                     Episodes = new[] {"nnn", "www"},
                     Planet = "moon",
-                    Name = "Vader",
+                    CharacterName = "Vader",
                     Friends = new[] {"f0"}
                 }
             };
+
+            var inserted1 = await InsertCharacter(characters[0]);
+            var inserted2 = await InsertCharacter(characters[1]);
 
             //when
             await _characterRepository.AddCharacters(characters);
 
             //then
-            var result = await _characterRepository.GetAllCharacters();
+            var result1 = await _characterRepository.GetCharacter(inserted1);
+            var result2 = await _characterRepository.GetCharacter(inserted2);
 
-            result.Should().ContainEquivalentOf(characters[0]);
-            result.Should().ContainEquivalentOf(characters[1]);
+            result1.CharacterName.Should().Be(characters[0].CharacterName);
+            result1.Episodes.Should().Be(string.Join(',', characters[0].Episodes));
+            result1.Friends.Should().Be(string.Join(',', characters[0].Friends));
+            result1.Planet.Should().Be(characters[0].Planet);
+
+            result2.CharacterName.Should().Be(characters[1].CharacterName);
+            result2.Episodes.Should().Be(string.Join(',', characters[1].Episodes));
+            result2.Friends.Should().Be(string.Join(',', characters[1].Friends));
+            result2.Planet.Should().Be(characters[1].Planet);
         }
 
         [Test]
         public async Task should_Update_character()
         {
             //given
-            var id = ObjectId.GenerateNewId().ToString();
-
             var character = new CharacterBase
             {
-                Id = id,
                 Episodes = new[] { "abc", "gfg" },
                 Planet = "planet",
-                Name = "Luke",
+                CharacterName = "Luke",
                 Friends = new[] { "f1", "f2" }
             };
 
             var characterToUpdate = new Character
             {
                 Episodes = new[] { "NEWHOPE", "EMPIRE", "JEDI" },
-                Name = "Luke",
+                CharacterName = "Luke",
                 Friends = new[] { "Han Solo", "Leia Organa", "C-3PO", "R2-D2" }
             };
 
-            var collection = Db.GetCollection<CharacterBase>(CharactersCollection);
-            collection.InsertOne(character);
+            var characterInsertedId = await InsertCharacter(character);
 
             //when
-            await _characterRepository.UpdateCharacter(id, characterToUpdate);
+            await _characterRepository.UpdateCharacter(characterInsertedId, characterToUpdate);
 
             //then
-            var result = await _characterRepository.GetCharacter(id);
+            var result = await _characterRepository.GetCharacter(characterInsertedId);
 
-            result.Should().BeEquivalentTo(characterToUpdate);
+            result.Friends.Should().Be(string.Join(',', characterToUpdate.Friends));
+            result.Episodes.Should().Be(string.Join(',', characterToUpdate.Episodes));
+            result.CharacterName.Should().Be(characterToUpdate.CharacterName);
+            result.Planet.Should().Be(characterToUpdate.Planet);
         }
 
         [Test]
         public async Task should_Delete_character()
         {
             //given
-            var id = ObjectId.GenerateNewId().ToString();
-
             var character = new CharacterBase
             {
-                Id = id,
                 Episodes = new[] { "abc", "gfg" },
                 Planet = "planet",
-                Name = "Luke",
+                CharacterName = "Luke",
                 Friends = new[] { "f1", "f2" }
             };
 
-            var collection = Db.GetCollection<CharacterBase>(CharactersCollection);
-            collection.InsertOne(character);
+            var insertedCharacterId = await InsertCharacter(character);
 
             //when
-            await _characterRepository.DeleteCharacter(id);
+            await _characterRepository.DeleteCharacter(insertedCharacterId);
 
             //then
-            var result = await _characterRepository.GetCharacter(id);
+            var result = await _characterRepository.GetCharacter(insertedCharacterId);
 
             result.Should().BeNull();
+        }
+
+        private async Task<int> InsertCharacterDto(CharacterDto character)
+        {
+            return (await SqlClient.QueryAsync<int>("insert into [Characters].[StarWarsCharacters] (characterName, episodes, planet, friends)" +
+                                                    $"Values('{character.CharacterName}', '{character.Episodes}', '{character.Planet}', '{character.Friends}')" +
+                                                    $"SELECT CAST(SCOPE_IDENTITY() as int)",
+                null, CommandType.Text)).Single();
+        }
+
+        private async Task<int> InsertCharacter(Character character)
+        {
+            return (await SqlClient.QueryAsync<int>("insert into [Characters].[StarWarsCharacters] (characterName, episodes, planet, friends)" +
+                                                    $"Values('{character.CharacterName}', '{string.Join(',',character.Episodes)}', '{character.Planet}', '{string.Join(',', character.Friends)}')" +
+                                                    $"SELECT CAST(SCOPE_IDENTITY() as int)",
+                null, CommandType.Text)).Single();
         }
     }
 }

@@ -1,61 +1,74 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using Bussiness.Models;
+using Dapper;
+using Domain.DbClients;
 using Domain.Dtos;
 using Domain.Interfaces;
-using MongoDB.Bson;
-using MongoDB.Driver;
 
 namespace Domain.Repositories
 {
     public class CharacterRepository : ICharacterRepository
     {
-        private readonly IMongoClient _mongoClient;
-        private readonly IMongoDatabase _database;
-        private readonly string _dbName = "StarWars";
-        private readonly string _collection = "characters";
+        private readonly ISqlClient _sqlClient;
 
-        public CharacterRepository(IMongoClient mongoClient)
+        public CharacterRepository(ISqlClient sqlClient)
         {
-            _mongoClient = mongoClient;
-            _database = _mongoClient.GetDatabase(_dbName);
-        }
-
-        //Constructor for integration tests
-        public CharacterRepository(IMongoClient mongoClient, string database, string collectionName) : this(mongoClient)
-        {
-            _database = _mongoClient.GetDatabase(database);
-            _collection = collectionName;
+            _sqlClient = sqlClient;
         }
 
         public async Task<List<CharacterDto>> GetAllCharacters()
         {
-            var collection = _database.GetCollection<CharacterDto>(_collection);
-            return (await collection.FindAsync(FilterDefinition<CharacterDto>.Empty)).ToList();
+            return (await _sqlClient.QueryAsync<CharacterDto>("[Characters].[GetCharacters]")).ToList();
         }
 
-        public async Task<CharacterDto> GetCharacter(string characterId)
+        public async Task<CharacterDto> GetCharacter(int characterId)
         {
-            var collection = _database.GetCollection<CharacterDto>(_collection);
-            return (await collection.FindAsync(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId)))).FirstOrDefault();
+            return (await _sqlClient.QueryAsync<CharacterDto>("[Characters].[GetCharacterByCharacterId]", 
+                new
+                {
+                    CharacterId = characterId
+                })
+                ).FirstOrDefault();
         }
 
-        public async Task AddCharacters(List<Character> character)
+        public async Task AddCharacters(List<Character> characters)
         {
-            var collection = _database.GetCollection<Character>(_collection);
-            await collection.InsertManyAsync(character);
+            foreach (var character in characters)
+            {
+                await _sqlClient.ExecuteAsync("[Characters].[InsertCharacters]", 
+                    new
+                    {
+                        Name = character.CharacterName,
+                        Episodes = string.Join(',', character.Episodes),
+                        character.Planet,
+                        Friends = string.Join(',', character.Friends),
+                    });
+            }
         }
 
-        public async Task UpdateCharacter(string characterId, Character character)
+        public async Task UpdateCharacter(int characterId, Character character)
         {
-            var collection = _database.GetCollection<Character>(_collection);
-            await collection.ReplaceOneAsync(Builders<Character>.Filter.Eq("_id", ObjectId.Parse(characterId)), character);
+            await _sqlClient.ExecuteAsync("[Characters].[UpdateCharacter]",
+                new
+                {
+                    CharacterId = characterId,
+                    Name = character.CharacterName,
+                    Episodes = string.Join(',', character.Episodes),
+                    character.Planet,
+                    Friends = string.Join(',', character.Friends),
+                });
         }
 
-        public async Task DeleteCharacter(string characterId)
+        public async Task DeleteCharacter(int characterId)
         {
-            var collection = _database.GetCollection<CharacterDto>(_collection);
-            await collection.DeleteOneAsync(Builders<CharacterDto>.Filter.Eq("_id", ObjectId.Parse(characterId)));
+            await _sqlClient.ExecuteAsync("[Characters].[DeleteCharacter]",
+                new
+                {
+                    CharacterId = characterId
+                });
         }
     }
 }

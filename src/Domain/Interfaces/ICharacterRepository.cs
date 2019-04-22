@@ -8,9 +8,9 @@ namespace Domain.Interfaces
     public interface ICharacterRepository
     {
         Task<List<CharacterDto>> GetAllCharacters();
-        Task<CharacterDto> GetCharacter(string characterId);
-        Task AddCharacters(List<Character> character);
-        Task UpdateCharacter(string characterId, Character character);
-        Task DeleteCharacter(string characterId);
+        Task<CharacterDto> GetCharacter(int characterId);
+        Task AddCharacters(List<Character> characters);
+        Task UpdateCharacter(int characterId, Character character);
+        Task DeleteCharacter(int characterId);
     }
 }
