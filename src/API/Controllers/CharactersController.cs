@@ -39,9 +39,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task Add([FromBody] List<CharacterBase> character)
+        public async Task Add([FromBody] List<CharacterBase> characters)
         {
-            await _characterService.AddCharacters(character);
+            await _characterService.AddCharacters(characters);
         }
 
         [ValidateIdFormat]
