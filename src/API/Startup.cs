@@ -41,7 +41,7 @@ namespace API
                 c.SwaggerDoc("v1", new Info { Title = "Star Wars characters", Version = "v1" });
             });
 
-            ConfigureDI(services);
+            ConfigureIoC(services);
         }
 
         public void Configure(IApplicationBuilder app)
@@ -57,14 +57,13 @@ namespace API
             app.UseMvc();
         }
 
-        private void ConfigureDI(IServiceCollection services)
+        private void ConfigureIoC(IServiceCollection services)
         {
             services.AddScoped<ICharacterService, CharacterService>();
             services.AddScoped<ICharacterRepository, CharacterRepository>();
             services.AddScoped<ICharacterMapper, CharacterMapper>();
 
-            //Connection string should come from appsettings.json
-            services.AddSingleton<ISqlClient>(ctx => new SqlCLient(new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWars;Trusted_Connection=True;")));
+            services.AddSingleton<ISqlClient>(ctx => new SqlCLient(new SqlConnection(Configuration.GetConnectionString("LocalDb"))));
         }
     }
 }
