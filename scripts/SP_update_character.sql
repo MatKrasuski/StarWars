@@ -12,7 +12,7 @@ ALTER PROCEDURE [Characters].[UpdateCharacter]
 AS
  BEGIN
     UPDATE [Characters].[StarWarsCharacters]
-    SET characterName = @Name,
+    SET [Name] = @Name,
         episodes = @Episodes,
         friends = @Friends,
         planet = @Planet

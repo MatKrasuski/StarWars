@@ -18,7 +18,7 @@ namespace API.Mappers
                     Id = characterDto.CharacterId,
                     Episodes = characterDto.Episodes.Split(',').ToArray(),
                     Planet = characterDto.Planet,
-                    CharacterName = characterDto.CharacterName,
+                    Name = characterDto.Name,
                     Friends = characterDto.Friends.Split(',').ToArray()
                 };
 
@@ -33,7 +33,7 @@ namespace API.Mappers
             return  new CharacterBase
             {
                 Friends = characterDto.Friends.Split(',').ToArray(),
-                CharacterName = characterDto.CharacterName,
+                Name = characterDto.Name,
                 Planet = characterDto.Planet,
                 Episodes = characterDto.Episodes.Split(',').ToArray(),
                 Id = characterDto.CharacterId

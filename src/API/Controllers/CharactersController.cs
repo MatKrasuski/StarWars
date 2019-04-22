@@ -24,7 +24,6 @@ namespace API.Controllers
             return new JsonResult(await _characterService.GetAllCharacters());
         }
 
-        [ValidateIdFormat]
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -44,14 +43,12 @@ namespace API.Controllers
             await _characterService.AddCharacters(characters);
         }
 
-        [ValidateIdFormat]
         [HttpPut("{id}")]
         public async Task Update(int id, [FromBody] Character character)
         {
             await _characterService.UpdateCharacter(id, character);
         }
 
-        [ValidateIdFormat]
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {

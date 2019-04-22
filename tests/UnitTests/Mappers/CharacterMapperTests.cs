@@ -28,7 +28,7 @@ namespace UnitTests.Mappers
                     CharacterId = 1,
                     Episodes = "ep1, ep2",
                     Friends = "friend1, friend2",
-                    CharacterName = "name",
+                    Name = "name",
                     Planet = "planet"
                 },
                 new CharacterDto
@@ -36,7 +36,7 @@ namespace UnitTests.Mappers
                     CharacterId =2,
                     Episodes = "ep4, ep5",
                     Friends = "friend55, friend222",
-                    CharacterName = "nameName"
+                    Name = "nameName"
                 }
             };
 
@@ -47,13 +47,13 @@ namespace UnitTests.Mappers
             Assert.AreEqual(input[0].CharacterId, output[0].Id);
             Assert.AreEqual(input[0].Episodes.Split(',').ToArray(), output[0].Episodes);
             Assert.AreEqual(input[0].Friends.Split(',').ToArray(), output[0].Friends);
-            Assert.AreEqual(input[0].CharacterName, output[0].CharacterName);
+            Assert.AreEqual(input[0].Name, output[0].Name);
             Assert.AreEqual(input[0].Planet, output[0].Planet);
 
             Assert.AreEqual(input[1].CharacterId, output[1].Id);
             Assert.AreEqual(input[1].Episodes.Split(',').ToArray(), output[1].Episodes);
             Assert.AreEqual(input[1].Friends.Split(',').ToArray(), output[1].Friends);
-            Assert.AreEqual(input[1].CharacterName, output[1].CharacterName);
+            Assert.AreEqual(input[1].Name, output[1].Name);
             Assert.AreEqual(input[1].Planet, output[1].Planet);
 
         }
@@ -67,7 +67,7 @@ namespace UnitTests.Mappers
                 CharacterId = 1,
                 Episodes = "ep4, ep5" ,
                 Friends = "friend55, friend222",
-                CharacterName = "nameName",
+                Name = "nameName",
                 Planet = "moon"
             };
 
@@ -78,7 +78,7 @@ namespace UnitTests.Mappers
             Assert.AreEqual(input.CharacterId, output.Id);
             Assert.AreEqual(input.Episodes.Split(',').ToArray(), output.Episodes);
             Assert.AreEqual(input.Friends.Split(',').ToArray(), output.Friends);
-            Assert.AreEqual(input.CharacterName, output.CharacterName);
+            Assert.AreEqual(input.Name, output.Name);
             Assert.AreEqual(input.Planet, output.Planet);
         }
     }

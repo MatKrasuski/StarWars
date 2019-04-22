@@ -10,7 +10,7 @@ ALTER PROCEDURE [Characters].[InsertCharacters]
 
 AS
  BEGIN
-    INSERT INTO [Characters].[StarWarsCharacters] (characterName, episodes, planet, friends)
+    INSERT INTO [Characters].[StarWarsCharacters] ([Name], episodes, planet, friends)
     VALUES(@Name, @Episodes, @Planet, @Friends)
  END
 GO

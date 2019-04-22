@@ -1,5 +1,4 @@
 ﻿using System.Data.SqlClient;
-using System.Linq;
 using API.Mappers;
 using API.Services;
 using Domain.DbClients;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -65,7 +63,8 @@ namespace API
             services.AddScoped<ICharacterRepository, CharacterRepository>();
             services.AddScoped<ICharacterMapper, CharacterMapper>();
 
-            services.AddSingleton<ISqlClient>(ctx => new SqlCLient(new SqlConnection(Configuration.GetConnectionString("LocalDb"))));
+            //Connection string should come from appsettings.json
+            services.AddSingleton<ISqlClient>(ctx => new SqlCLient(new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWars;Trusted_Connection=True;")));
         }
     }
 }

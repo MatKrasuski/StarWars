@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Bussiness.Models;
-using Dapper;
 using Domain.DbClients;
 using Domain.Dtos;
 using Domain.Interfaces;
@@ -41,7 +39,7 @@ namespace Domain.Repositories
                 await _sqlClient.ExecuteAsync("[Characters].[InsertCharacters]", 
                     new
                     {
-                        Name = character.CharacterName,
+                        Name = character.Name,
                         Episodes = string.Join(',', character.Episodes),
                         character.Planet,
                         Friends = string.Join(',', character.Friends),
@@ -55,7 +53,7 @@ namespace Domain.Repositories
                 new
                 {
                     CharacterId = characterId,
-                    Name = character.CharacterName,
+                    Name = character.Name,
                     Episodes = string.Join(',', character.Episodes),
                     character.Planet,
                     Friends = string.Join(',', character.Friends),
