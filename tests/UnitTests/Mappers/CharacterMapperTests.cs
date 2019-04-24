@@ -45,14 +45,14 @@ namespace UnitTests.Mappers
 
             //then
             Assert.AreEqual(input[0].CharacterId, output[0].Id);
-            Assert.AreEqual(input[0].Episodes.Split(',').ToArray(), output[0].Episodes);
-            Assert.AreEqual(input[0].Friends.Split(',').ToArray(), output[0].Friends);
+            Assert.AreEqual(input[0].Episodes.Split('|').ToArray(), output[0].Episodes);
+            Assert.AreEqual(input[0].Friends.Split('|').ToArray(), output[0].Friends);
             Assert.AreEqual(input[0].Name, output[0].Name);
             Assert.AreEqual(input[0].Planet, output[0].Planet);
 
             Assert.AreEqual(input[1].CharacterId, output[1].Id);
-            Assert.AreEqual(input[1].Episodes.Split(',').ToArray(), output[1].Episodes);
-            Assert.AreEqual(input[1].Friends.Split(',').ToArray(), output[1].Friends);
+            Assert.AreEqual(input[1].Episodes.Split('|').ToArray(), output[1].Episodes);
+            Assert.AreEqual(input[1].Friends.Split('|').ToArray(), output[1].Friends);
             Assert.AreEqual(input[1].Name, output[1].Name);
             Assert.AreEqual(input[1].Planet, output[1].Planet);
 
@@ -76,8 +76,8 @@ namespace UnitTests.Mappers
 
             //then
             Assert.AreEqual(input.CharacterId, output.Id);
-            Assert.AreEqual(input.Episodes.Split(',').ToArray(), output.Episodes);
-            Assert.AreEqual(input.Friends.Split(',').ToArray(), output.Friends);
+            Assert.AreEqual(input.Episodes.Split('|').ToArray(), output.Episodes);
+            Assert.AreEqual(input.Friends.Split('|').ToArray(), output.Friends);
             Assert.AreEqual(input.Name, output.Name);
             Assert.AreEqual(input.Planet, output.Planet);
         }
