@@ -3,6 +3,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Bussiness.Models;
+using Dapper;
 using Domain.Dtos;
 using Domain.Repositories;
 using FluentAssertions;
@@ -20,7 +21,7 @@ namespace IntegrationTests.Repositories
         {
             await ClearCharactersTable();
 
-            _characterRepository = new CharacterRepository(SqlClient);
+            _characterRepository = new CharacterRepository(SqlConnection);
         }
 
         [Test]
@@ -186,18 +187,18 @@ namespace IntegrationTests.Repositories
 
         private async Task<int> InsertCharacterDto(CharacterDto character)
         {
-            return (await SqlClient.QueryAsync<int>("insert into [Characters].[StarWarsCharacters] (Name, Episodes, Planet, Friends)" +
+            return (await SqlConnection.QueryAsync<int>("insert into [Characters].[StarWarsCharacters] (Name, Episodes, Planet, Friends)" +
                                                     $"Values('{character.Name}', '{character.Episodes}', '{character.Planet}', '{character.Friends}')" +
                                                     $"SELECT CAST(SCOPE_IDENTITY() as int)",
-                null, CommandType.Text)).Single();
+                commandType: CommandType.Text)).Single();
         }
 
         private async Task<int> InsertCharacter(Character character)
         {
-            return (await SqlClient.QueryAsync<int>("insert into [Characters].[StarWarsCharacters] (Name, Episodes, Planet, Friends)" +
+            return (await SqlConnection.QueryAsync<int>("insert into [Characters].[StarWarsCharacters] (Name, Episodes, Planet, Friends)" +
                                                     $"Values('{character.Name}', '{string.Join(',',character.Episodes)}', '{character.Planet}', '{string.Join(',', character.Friends)}')" +
                                                     $"SELECT CAST(SCOPE_IDENTITY() as int)",
-                null, CommandType.Text)).Single();
+                commandType: CommandType.Text)).Single();
         }
     }
 }

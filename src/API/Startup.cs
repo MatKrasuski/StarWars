@@ -1,7 +1,7 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using API.Mappers;
 using API.Services;
-using Domain.DbClients;
 using Domain.Interfaces;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -63,7 +63,7 @@ namespace API
             services.AddScoped<ICharacterRepository, CharacterRepository>();
             services.AddScoped<ICharacterMapper, CharacterMapper>();
 
-            services.AddSingleton<ISqlClient>(ctx => new SqlCLient(new SqlConnection(Configuration.GetConnectionString("LocalDb"))));
+            services.AddSingleton<IDbConnection>(ctx => new SqlConnection(Configuration.GetConnectionString("LocalDb")));
         }
     }
 }
