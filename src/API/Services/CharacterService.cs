@@ -17,13 +17,13 @@ namespace API.Services
             _characterMapper = characterMapper;
         }
 
-        public async Task<List<CharacterBase>> GetAllCharacters()
+        public async Task<List<Character>> GetAllCharacters()
         {
             var charactersDto =  await _characterRepository.GetAllCharacters();
             return _characterMapper.MapCharacters(charactersDto);
         }
 
-        public async Task<CharacterBase> GetCharacter(int characterId)
+        public async Task<Character> GetCharacter(int characterId)
         {
             var characterDto =  await _characterRepository.GetCharacter(characterId);
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Bussiness.Models;
 using Domain.Dtos;
 
@@ -7,19 +6,19 @@ namespace API.Mappers
 {
     public class CharacterMapper : ICharacterMapper
     {
-        public List<CharacterBase> MapCharacters(List<CharacterDto> charactersDto)
+        public List<Character> MapCharacters(List<CharacterDto> charactersDto)
         {
-            var characters = new List<CharacterBase>();
+            var characters = new List<Character>();
 
             foreach (var characterDto in charactersDto)
             {
-                var character = new  CharacterBase
+                var character = new  Character
                 {
-                    Id = characterDto.CharacterId,
-                    Episodes = characterDto.Episodes.Split(',').ToArray(),
+                    CharacterId = characterDto.CharacterId,
                     Planet = characterDto.Planet,
                     Name = characterDto.Name,
-                    Friends = characterDto.Friends.Split(',').ToArray()
+                    Episodes = characterDto.Episodes,
+                    Friends = characterDto.Friends
                 };
 
                 characters.Add(character);
@@ -28,15 +27,16 @@ namespace API.Mappers
             return characters;
         }
 
-        public CharacterBase MapSingleCharacter(CharacterDto characterDto)
+        public Character MapSingleCharacter(CharacterDto characterDto)
         {
-            return  new CharacterBase
+            return  new Character
             {
-                Friends = characterDto.Friends.Split(',').ToArray(),
+                CharacterId = characterDto.CharacterId,
                 Name = characterDto.Name,
                 Planet = characterDto.Planet,
-                Episodes = characterDto.Episodes.Split(',').ToArray(),
-                Id = characterDto.CharacterId
+                Friends = characterDto.Friends,
+                Episodes = characterDto.Episodes
+                
             };
         }
     }

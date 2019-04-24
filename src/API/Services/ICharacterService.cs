@@ -6,8 +6,8 @@ namespace API.Services
 {
     public interface ICharacterService
     {
-        Task<List<CharacterBase>> GetAllCharacters();
-        Task<CharacterBase> GetCharacter(int characterId);
+        Task<List<Character>> GetAllCharacters();
+        Task<Character> GetCharacter(int characterId);
         Task AddCharacters(List<Character> character);
         Task UpdateCharacter(int id, Character character);
         Task DeleteCharacter(int id);

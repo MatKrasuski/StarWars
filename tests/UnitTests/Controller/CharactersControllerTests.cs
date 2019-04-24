@@ -22,7 +22,7 @@ namespace UnitTests.Controller
             _characterController = new CharactersController(_charactersServiceMock.Object);
 
             // Setups
-            _charactersServiceMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new List<CharacterBase>());
+            _charactersServiceMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new List<Character>());
         }
 
         [Test]

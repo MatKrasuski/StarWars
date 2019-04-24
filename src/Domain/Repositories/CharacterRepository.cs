@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Bussiness.Models;
-using Domain.DbClients;
+using Dapper;
 using Domain.Dtos;
 using Domain.Interfaces;
 
@@ -10,59 +11,218 @@ namespace Domain.Repositories
 {
     public class CharacterRepository : ICharacterRepository
     {
-        private readonly ISqlClient _sqlClient;
+        private readonly IDbConnection _dbConnection;
 
-        public CharacterRepository(ISqlClient sqlClient)
+        public CharacterRepository(IDbConnection dbConnection)
         {
-            _sqlClient = sqlClient;
+            _dbConnection = dbConnection;
         }
 
         public async Task<List<CharacterDto>> GetAllCharacters()
         {
-            return (await _sqlClient.QueryAsync<CharacterDto>("[Characters].[GetCharacters]")).ToList();
+            var charactersDictionary = new Dictionary<int, CharacterDto>();
+
+            //when
+            await _dbConnection.QueryAsync<CharacterDto, Episode, Friend, CharacterDto>("[Characters].[GetAllCharacters]",
+                (character, episode, friend) =>
+                {
+                    if (!charactersDictionary.TryGetValue(character.CharacterId, out var characterEntry))
+                    {
+                        charactersDictionary.Add(character.CharacterId, characterEntry = character);
+                    }
+
+                    //episodes
+                    if (characterEntry.Episodes == null)
+                    {
+                        characterEntry.Episodes = new List<Episode>();
+                    }
+
+                    if (episode != null)
+                    {
+                        if (characterEntry.Episodes.All(x => x.EpisodeId != episode.EpisodeId))
+                        {
+                            characterEntry.Episodes.Add(episode);
+                        }
+                    }
+
+                    //friends
+                    if (characterEntry.Friends == null)
+                    {
+                        characterEntry.Friends = new List<Friend>();
+                    }
+
+                    if (friend != null)
+                    {
+                        if (characterEntry.Friends.All(x => x.FriendId != friend.FriendId))
+                        {
+                            characterEntry.Friends.Add(friend);
+                        }
+                    }
+
+                    return characterEntry;
+
+                }, splitOn: "EpisodeId,FriendId",
+                commandType: CommandType.StoredProcedure);
+
+            var characters = new List<CharacterDto>();
+
+            foreach (var item in charactersDictionary)
+            {
+                var character = new CharacterDto
+                {
+                    CharacterId = item.Key,
+                    Name = item.Value.Name,
+                    Planet = item.Value.Planet,
+                    Episodes = item.Value.Episodes,
+                    Friends = item.Value.Friends
+                };
+
+                characters.Add(character);
+            }
+
+            return characters;
         }
 
         public async Task<CharacterDto> GetCharacter(int characterId)
         {
-            return (await _sqlClient.QueryAsync<CharacterDto>("[Characters].[GetCharacterByCharacterId]", 
-                new
+            var charactersDictionary = new Dictionary<int, CharacterDto>();
+
+            //when
+            await _dbConnection.QueryAsync<CharacterDto, Episode, Friend, CharacterDto>("[Characters].[GetCharacterById]",
+                (character, episode, friend) =>
                 {
-                    CharacterId = characterId
-                })
-                ).FirstOrDefault();
+                    if (!charactersDictionary.TryGetValue(character.CharacterId, out var characterEntry))
+                    {
+                        charactersDictionary.Add(character.CharacterId, characterEntry = character);
+                    }
+
+                    //episodes
+                    if (characterEntry.Episodes == null)
+                    {
+                        characterEntry.Episodes = new List<Episode>();
+                    }
+
+                    if (episode != null)
+                    {
+                        if (characterEntry.Episodes.All(x => x.EpisodeId != episode.EpisodeId))
+                        {
+                            characterEntry.Episodes.Add(episode);
+                        }
+                    }
+
+                    //friends
+                    if (characterEntry.Friends == null)
+                    {
+                        characterEntry.Friends = new List<Friend>();
+                    }
+
+                    if (friend != null)
+                    {
+                        if (characterEntry.Friends.All(x => x.FriendId != friend.FriendId))
+                        {
+                            characterEntry.Friends.Add(friend);
+                        }
+                    }
+
+                    return characterEntry;
+
+                },
+                new { CharacterId = characterId },
+                commandType: CommandType.StoredProcedure,
+                splitOn: "EpisodeId,FriendId");
+
+            var characters = new List<CharacterDto>();
+
+            foreach (var item in charactersDictionary)
+            {
+                var character = new CharacterDto
+                {
+                    CharacterId = item.Key,
+                    Name = item.Value.Name,
+                    Planet = item.Value.Planet,
+                    Episodes = item.Value.Episodes,
+                    Friends = item.Value.Friends
+                };
+
+                characters.Add(character);
+            }
+
+            return characters.Single();
         }
 
         public async Task AddCharacters(List<Character> characters)
         {
             foreach (var character in characters)
             {
-                await _sqlClient.ExecuteAsync("[Characters].[InsertCharacters]", 
+                var characterId = (await _dbConnection.QueryAsync<int>("[Characters].[InsertCharacter]",
                     new
                     {
-                        Name = character.Name,
-                        Episodes = string.Join(',', character.Episodes),
-                        character.Planet,
-                        Friends = string.Join(',', character.Friends),
-                    });
+                        character.Name,
+                        character.Planet
+                    },
+                    commandType: CommandType.StoredProcedure)).Single();
+
+                foreach (var characterEpisode in character.Episodes)
+                {
+                    await _dbConnection.ExecuteAsync("[Characters].[InsertEpisode]",
+                        new
+                        {
+                            Episode = characterEpisode.EpisodeName,
+                            CharacterId = characterId
+                        },
+                        commandType: CommandType.StoredProcedure);
+                }
+
+                foreach (var characterFriend in character.Friends)
+                {
+                    await _dbConnection.ExecuteAsync("[Characters].[InsertFriend]",
+                        new
+                        {
+                            Friend = characterFriend.FriendName,
+                            CharacterId = characterId
+                        },
+                        commandType: CommandType.StoredProcedure);
+                }
             }
         }
 
         public async Task UpdateCharacter(int characterId, Character character)
         {
-            await _sqlClient.ExecuteAsync("[Characters].[UpdateCharacter]",
+            await _dbConnection.ExecuteAsync("[Characters].[UpdateCharacter]",
                 new
                 {
                     CharacterId = characterId,
-                    Name = character.Name,
-                    Episodes = string.Join(',', character.Episodes),
+                    character.Name,
                     character.Planet,
-                    Friends = string.Join(',', character.Friends),
-                });
+                },
+                commandType: CommandType.StoredProcedure);
+
+            foreach (var characterEpisode in character.Episodes)
+            {
+                await _dbConnection.ExecuteAsync("[Characters].[UpdateEpisode]",
+                    new
+                    {
+                        Episode = characterEpisode.EpisodeName,
+                        CharacterId = characterId
+                    },
+                    commandType: CommandType.StoredProcedure);
+            }
+
+            foreach (var characterFriend in character.Friends)
+            {
+                await _dbConnection.ExecuteAsync("[Characters].[UpdateFriend]",
+                    new
+                    {
+                        Friend = characterFriend.FriendName,
+                        CharacterId = characterId
+                    },
+                    commandType: CommandType.StoredProcedure);
+            }
         }
 
         public async Task DeleteCharacter(int characterId)
         {
-            await _sqlClient.ExecuteAsync("[Characters].[DeleteCharacter]",
+            await _dbConnection.ExecuteAsync("[Characters].[DeleteCharacter]",
                 new
                 {
                     CharacterId = characterId

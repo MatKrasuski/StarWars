@@ -1,6 +1,6 @@
 ﻿namespace Bussiness.Models
 {
-    public class NullCharacter : CharacterBase
+    public class NullCharacter : Character
     {
     }
 }

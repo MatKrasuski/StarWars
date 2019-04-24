@@ -82,13 +82,13 @@ namespace UnitTests.Services
             var charactersDto = new List<CharacterDto>();
 
             _characterRepositoryMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(charactersDto);
-            _characterMapperMock.Setup(m => m.MapCharacters(charactersDto)).Returns(new List<CharacterBase>());
+            _characterMapperMock.Setup(m => m.MapCharacters(charactersDto)).Returns(new List<Character>());
 
             //when
             var result = await _characterService.GetAllCharacters();
 
             //then
-            Assert.IsInstanceOf<List<CharacterBase>>(result);
+            Assert.IsInstanceOf<List<Character>>(result);
         }
 
         [Test]
@@ -99,13 +99,13 @@ namespace UnitTests.Services
             var characterDto = new CharacterDto();
 
             _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync(characterDto);
-            _characterMapperMock.Setup(m => m.MapSingleCharacter(characterDto)).Returns(new CharacterBase());
+            _characterMapperMock.Setup(m => m.MapSingleCharacter(characterDto)).Returns(new Character());
 
             //when
             var result = await _characterService.GetCharacter(characterId);
 
             //then
-            Assert.IsInstanceOf<CharacterBase>(result);
+            Assert.IsInstanceOf<Character>(result);
         }
 
         [Test]

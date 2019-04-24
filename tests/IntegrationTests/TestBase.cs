@@ -1,19 +1,19 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using Domain.DbClients;
+using Dapper;
 
 namespace IntegrationTests
 {
     public class TestBase
     {
-        protected readonly IDbConnection SqlConnection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWarsTest;Trusted_Connection=True;");
-
-        protected ISqlClient SqlClient => new SqlCLient(SqlConnection);
+        protected readonly IDbConnection DbConnection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWarsTest;Trusted_Connection=True;");
 
         internal async Task ClearCharactersTable()
         {
-            await SqlClient.ExecuteAsync("truncate table [Characters].[StarWarsCharacters]", null, CommandType.Text);
+            await DbConnection.ExecuteAsync("truncate table [Characters].[StarWarsCharacters2]", commandType: CommandType.Text);
+            await DbConnection.ExecuteAsync("truncate table [Characters].[Friends]", commandType: CommandType.Text);
+            await DbConnection.ExecuteAsync("truncate table [Characters].[Episodes]", commandType: CommandType.Text);
         }
     }
 }
