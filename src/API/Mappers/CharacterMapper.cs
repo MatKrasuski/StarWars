@@ -16,10 +16,10 @@ namespace API.Mappers
                 var character = new  CharacterBase
                 {
                     Id = characterDto.CharacterId,
-                    Episodes = characterDto.Episodes.Split(',').ToArray(),
+                    Episodes = characterDto.Episodes.Split('|').ToArray(),
                     Planet = characterDto.Planet,
                     Name = characterDto.Name,
-                    Friends = characterDto.Friends.Split(',').ToArray()
+                    Friends = characterDto.Friends.Split('|').ToArray()
                 };
 
                 characters.Add(character);
@@ -32,10 +32,10 @@ namespace API.Mappers
         {
             return  new CharacterBase
             {
-                Friends = characterDto.Friends.Split(',').ToArray(),
+                Friends = characterDto.Friends.Split('|').ToArray(),
                 Name = characterDto.Name,
                 Planet = characterDto.Planet,
-                Episodes = characterDto.Episodes.Split(',').ToArray(),
+                Episodes = characterDto.Episodes.Split('|').ToArray(),
                 Id = characterDto.CharacterId
             };
         }

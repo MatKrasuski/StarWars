@@ -33,7 +33,7 @@ namespace IntegrationTests.Repositories
             var character1 = new CharacterDto
             {
                 CharacterId = 1,
-                Episodes = "abc, gfg",
+                Episodes = "abc|gfg",
                 Planet = "planet",
                 Name = "Luke",
                 Friends = "f1,f2"
@@ -42,7 +42,7 @@ namespace IntegrationTests.Repositories
             var character2 = new CharacterDto
             {
                 CharacterId = 1,
-                Episodes = "qqq, bbb",
+                Episodes = "qqq|bbb",
                 Name = "Lukas",
                 Friends = "q1, q2"
             };
@@ -69,7 +69,7 @@ namespace IntegrationTests.Repositories
             //given
             var character = new CharacterDto
             {
-                Episodes = "abc, gfg",
+                Episodes = "abc|gfg",
                 Planet = "planet",
                 Name = "Luke",
                 Friends = "f1,f2"
@@ -119,13 +119,13 @@ namespace IntegrationTests.Repositories
             var result2 = await _characterRepository.GetCharacter(inserted2);
 
             result1.Name.Should().Be(characters[0].Name);
-            result1.Episodes.Should().Be(string.Join(',', characters[0].Episodes));
-            result1.Friends.Should().Be(string.Join(',', characters[0].Friends));
+            result1.Episodes.Should().Be(string.Join('|', characters[0].Episodes));
+            result1.Friends.Should().Be(string.Join('|', characters[0].Friends));
             result1.Planet.Should().Be(characters[0].Planet);
 
             result2.Name.Should().Be(characters[1].Name);
-            result2.Episodes.Should().Be(string.Join(',', characters[1].Episodes));
-            result2.Friends.Should().Be(string.Join(',', characters[1].Friends));
+            result2.Episodes.Should().Be(string.Join('|', characters[1].Episodes));
+            result2.Friends.Should().Be(string.Join('|', characters[1].Friends));
             result2.Planet.Should().Be(characters[1].Planet);
         }
 
@@ -156,8 +156,8 @@ namespace IntegrationTests.Repositories
             //then
             var result = await _characterRepository.GetCharacter(characterInsertedId);
 
-            result.Friends.Should().Be(string.Join(',', characterToUpdate.Friends));
-            result.Episodes.Should().Be(string.Join(',', characterToUpdate.Episodes));
+            result.Friends.Should().Be(string.Join('|', characterToUpdate.Friends));
+            result.Episodes.Should().Be(string.Join('|', characterToUpdate.Episodes));
             result.Name.Should().Be(characterToUpdate.Name);
             result.Planet.Should().Be(characterToUpdate.Planet);
         }
@@ -196,7 +196,7 @@ namespace IntegrationTests.Repositories
         private async Task<int> InsertCharacter(Character character)
         {
             return (await SqlConnection.QueryAsync<int>("insert into [Characters].[StarWarsCharacters] (Name, Episodes, Planet, Friends)" +
-                                                    $"Values('{character.Name}', '{string.Join(',',character.Episodes)}', '{character.Planet}', '{string.Join(',', character.Friends)}')" +
+                                                    $"Values('{character.Name}', '{string.Join('|',character.Episodes)}', '{character.Planet}', '{string.Join('|', character.Friends)}')" +
                                                     $"SELECT CAST(SCOPE_IDENTITY() as int)",
                 commandType: CommandType.Text)).Single();
         }

@@ -41,9 +41,9 @@ namespace Domain.Repositories
                     new
                     {
                         Name = character.Name,
-                        Episodes = string.Join(',', character.Episodes),
+                        Episodes = string.Join('|', character.Episodes),
                         character.Planet,
-                        Friends = string.Join(',', character.Friends),
+                        Friends = string.Join('|', character.Friends),
                     }, commandType: CommandType.StoredProcedure);
             }
         }
@@ -55,9 +55,9 @@ namespace Domain.Repositories
                 {
                     CharacterId = characterId,
                     Name = character.Name,
-                    Episodes = string.Join(',', character.Episodes),
+                    Episodes = string.Join('|', character.Episodes),
                     character.Planet,
-                    Friends = string.Join(',', character.Friends),
+                    Friends = string.Join('|', character.Friends),
                 }, commandType: CommandType.StoredProcedure);
         }
 
