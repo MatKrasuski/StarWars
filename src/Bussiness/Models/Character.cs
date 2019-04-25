@@ -7,8 +7,8 @@ namespace Bussiness.Models
         public int CharacterId { get; set; }
         public string Planet { get; set; }
         public string Name { get; set; }
-        public List<Episode> Episodes { get; set; }
-        public List<Friend> Friends { get; set; }
+        public string[] Episodes { get; set; }
+        public string[] Friends { get; set; }
     }
 }
 

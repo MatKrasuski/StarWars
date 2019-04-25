@@ -28,8 +28,6 @@ namespace IntegrationTests.Repositories
         public async Task should_get_all_characters()
         {
             //given
-            //await ClearCharactersTable();
-
             var characters = new List<CharacterDto>
             {
                 new CharacterDto
@@ -65,8 +63,8 @@ namespace IntegrationTests.Repositories
 
             };
 
-            await InsertCharacterDto(characters[0]);
-            await InsertCharacterDto(characters[1]);
+            await InsertCharacter(characters[0]);
+            await InsertCharacter(characters[1]);
 
             //when
             var result = await _characterRepository.GetAllCharacters();
@@ -107,7 +105,7 @@ namespace IntegrationTests.Repositories
                 Planet = "Planet"
             };
 
-            var insertedCandidateId = await InsertCharacterDto(character);
+            var insertedCandidateId = await InsertCharacter(character);
 
             //when
             var result = await _characterRepository.GetCharacter(insertedCandidateId);
@@ -127,9 +125,9 @@ namespace IntegrationTests.Repositories
             //given
             await ClearCharactersTable();
 
-            var characters = new List<Character>
+            var characters = new List<CharacterDto>
             {
-                new Character
+                new CharacterDto
                 {
                     Episodes = new List<Episode>
                     {
@@ -144,7 +142,7 @@ namespace IntegrationTests.Repositories
                     Name = "Name",
                     Planet = "Planet"
                 },
-                new Character
+                new CharacterDto
                 {
                     Episodes = new List<Episode>
                     {
@@ -187,7 +185,7 @@ namespace IntegrationTests.Repositories
         public async Task should_Update_character()
         {
             //given
-            var character = new Character
+            var character = new CharacterDto
             {
                 Episodes = new List<Episode>
                 {
@@ -203,7 +201,7 @@ namespace IntegrationTests.Repositories
                 Planet = "Planet"
             };
 
-            var characterToUpdate = new Character
+            var characterToUpdate = new CharacterDto
             {
                 Episodes = new List<Episode>
                 {
@@ -235,65 +233,38 @@ namespace IntegrationTests.Repositories
             result.Friends[1].FriendName.Should().Be(characterToUpdate.Friends[1].FriendName);
         }
 
-        //[Test]
-        //public async Task should_Delete_character()
-        //{
-        //    //given
-        //    var character = new CharacterBase
-        //    {
-        //        Episodes = new[] { "abc", "gfg" },
-        //        Planet = "planet",
-        //        Name = "Luke",
-        //        Friends = new[] { "f1", "f2" }
-        //    };
-
-        //    var insertedCharacterId = await InsertCharacter(character);
-
-        //    //when
-        //    await _characterRepository.DeleteCharacter(insertedCharacterId);
-
-        //    //then
-        //    var result = await _characterRepository.GetCharacter(insertedCharacterId);
-
-        //    result.Should().BeNull();
-        //}
-
-        private async Task<int> InsertCharacterDto(CharacterDto character)
+        [Test]
+        public async Task should_Delete_character()
         {
-            var characterId = (await DbConnection.QueryAsync<int>("[Characters].[InsertCharacter]",
-                new
+            //given
+            var character = new CharacterDto
+            {
+                Episodes = new List<Episode>
                 {
-                    character.Name,
-                    character.Planet
+                    new Episode {EpisodeName = "NEW Episode 1"},
+                    new Episode {EpisodeName = "NEW Episode 2"}
                 },
-                commandType: CommandType.StoredProcedure)).Single();
+                Friends = new List<Friend>
+                {
+                    new Friend {FriendName = "Friend 1"},
+                    new Friend {FriendName = "Friend 1"}
+                },
+                Name = "Name",
+                Planet = "Planet"
+            };
 
-            foreach (var characterEpisode in character.Episodes)
-            {
-                await DbConnection.ExecuteAsync("[Characters].[InsertEpisode]",
-                    new
-                    {
-                        Episode = characterEpisode.EpisodeName,
-                        CharacterId = characterId
-                    },
-                    commandType: CommandType.StoredProcedure);
-            }
+            var insertedCharacterId = await InsertCharacter(character);
 
-            foreach (var characterFriend in character.Friends)
-            {
-                await DbConnection.ExecuteAsync("[Characters].[InsertFriend]",
-                    new
-                    {
-                        Friend = characterFriend.FriendName,
-                        CharacterId = characterId
-                    },
-                    commandType: CommandType.StoredProcedure);
-            }
+            //when
+            await _characterRepository.DeleteCharacter(insertedCharacterId);
 
-            return characterId;
+            //then
+            var result = await _characterRepository.GetCharacter(insertedCharacterId);
+
+            result.Should().BeNull();
         }
 
-        private async Task<int> InsertCharacter(Character character)
+        private async Task<int> InsertCharacter(CharacterDto character)
         {
             var characterId = (await DbConnection.QueryAsync<int>("[Characters].[InsertCharacter]",
                 new

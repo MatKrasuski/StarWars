@@ -64,5 +64,11 @@
     <EmbeddedResource Include="Scripts\0009 - SP_InsertFriend.sql" />
     <EmbeddedResource Include="Scripts\0010 - SP_UpdateCharacter.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\0011 - SP_InsertEpisodesAndFriends.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\0012 - SP_DeleteCharacter.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

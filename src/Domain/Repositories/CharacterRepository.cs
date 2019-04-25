@@ -147,66 +147,36 @@ namespace Domain.Repositories
                 characters.Add(character);
             }
 
-            return characters.Single();
+            return characters.SingleOrDefault();
         }
 
-        public async Task AddCharacters(List<Character> characters)
+        public async Task AddCharacters(List<CharacterDto> characters)
         {
             foreach (var character in characters)
             {
-                var friends = new DataTable();
-                friends.Columns.Add("StringItem", typeof(string));
-
-                foreach (var characterFriend in characters.SelectMany(s => s.Friends))
-                {
-                    friends.Rows.Add(characterFriend.FriendName);
-                }
-
-                var episodes = new DataTable();
-                episodes.Columns.Add("Id", typeof(int));
-                episodes.Columns.Add("StringItem", typeof(string));
-
-                foreach (var characterEpisode in characters.SelectMany(s => s.Episodes))
-                {
-                    episodes.Rows.Add(characterEpisode.EpisodeName);
-                }
-
-
                 var characterId = (await _dbConnection.QueryAsync<int>("[Characters].[InsertCharacter]",
                     new
                     {
                         character.Name,
-                        character.Planet,
-                        Episodes = episodes.AsTableValuedParameter("dbo.StringValues"),
-                        Friends = friends.AsTableValuedParameter("dbo.StringValues")
+                        character.Planet
+                        
                     },
                     commandType: CommandType.StoredProcedure)).Single();
 
-                //foreach (var characterEpisode in character.Episodes)
-                //{
-                //    await _dbConnection.ExecuteAsync("[Characters].[InsertEpisode]",
-                //        new
-                //        {
-                //            Episode = characterEpisode.EpisodeName,
-                //            CharacterId = characterId
-                //        },
-                //        commandType: CommandType.StoredProcedure);
-                //}
+                var episodes = CreateEpisodesNamesDataTable(characterId, character.Episodes);
+                var friends = CreateFriendsNamesDataTable(characterId, character.Friends);
 
-                //foreach (var characterFriend in character.Friends)
-                //{
-                //    await _dbConnection.ExecuteAsync("[Characters].[InsertFriend]",
-                //        new
-                //        {
-                //            Friend = characterFriend.FriendName,
-                //            CharacterId = characterId
-                //        },
-                //        commandType: CommandType.StoredProcedure);
-                //}
+                await _dbConnection.ExecuteAsync("[Characters].[InsertEpisodesAndFriends]",
+                    new
+                    {
+                        Episodes = episodes.AsTableValuedParameter("dbo.StringValues"),
+                        Friends = friends.AsTableValuedParameter("dbo.StringValues")
+                    }, 
+                    commandType: CommandType.StoredProcedure);
             }
         }
 
-        public async Task UpdateCharacter(int characterId, Character character)
+        public async Task UpdateCharacter(int characterId, CharacterDto character)
         {
             var episodes = CreateEpisodesNamesDataTable(characterId, character.Episodes);
             var friends = CreateFriendsNamesDataTable(characterId, character.Friends);
@@ -229,7 +199,8 @@ namespace Domain.Repositories
                 new
                 {
                     CharacterId = characterId
-                });
+                },
+                commandType: CommandType.StoredProcedure);
         }
 
         private static DataTable CreateFriendsNamesDataTable(int characterId, List<Friend> characterFriends)

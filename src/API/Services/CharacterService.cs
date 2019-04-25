@@ -37,17 +37,17 @@ namespace API.Services
 
         public async Task AddCharacters(List<Character> character)
         {
-            await _characterRepository.AddCharacters(character);
+            //await _characterRepository.AddCharacters(character);
         }
 
-        public async  Task UpdateCharacter(int id, Character character)
+        public async  Task UpdateCharacter(int characterId, Character character)
         {
-            await _characterRepository.UpdateCharacter(id, character);
+            //await _characterRepository.UpdateCharacter(characterId, character);
         }
 
-        public async Task DeleteCharacter(int id)
+        public async Task DeleteCharacter(int characterId)
         {
-            await _characterRepository.DeleteCharacter(id);
+            await _characterRepository.DeleteCharacter(characterId);
         }
     }
 }

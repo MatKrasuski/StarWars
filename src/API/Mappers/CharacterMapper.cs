@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Bussiness.Models;
 using Domain.Dtos;
 
@@ -17,8 +18,8 @@ namespace API.Mappers
                     CharacterId = characterDto.CharacterId,
                     Planet = characterDto.Planet,
                     Name = characterDto.Name,
-                    Episodes = characterDto.Episodes,
-                    Friends = characterDto.Friends
+                    Episodes = characterDto.Episodes.Select(s => s.EpisodeName).ToArray(),
+                    Friends = characterDto.Friends.Select(s => s.FriendName).ToArray()
                 };
 
                 characters.Add(character);
@@ -34,10 +35,31 @@ namespace API.Mappers
                 CharacterId = characterDto.CharacterId,
                 Name = characterDto.Name,
                 Planet = characterDto.Planet,
-                Friends = characterDto.Friends,
-                Episodes = characterDto.Episodes
-                
+                Episodes = characterDto.Episodes.Select(s => s.EpisodeName).ToArray(),
+                Friends = characterDto.Friends.Select(s => s.FriendName).ToArray()
+
             };
+        }
+
+        public List<CharacterDto> MapCaractersToDto(List<Character> characters)
+        {
+            var charactersDto = new List<CharacterDto>();
+
+            foreach (var characterItem in characters)
+            {
+                var character = new CharacterDto
+                {
+                    CharacterId = characterItem.CharacterId,
+                    Planet = characterItem.Planet,
+                    Name = characterItem.Name,
+                    //Episodes = characterItem.Episodes.Select(x => ),
+                    //Friends = characterItem.Friends.Select(s => s.FriendName).ToArray()
+                };
+
+                charactersDto.Add(character);
+            }
+
+            return charactersDto;
         }
     }
 }

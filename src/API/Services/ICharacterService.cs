@@ -10,6 +10,6 @@ namespace API.Services
         Task<Character> GetCharacter(int characterId);
         Task AddCharacters(List<Character> character);
         Task UpdateCharacter(int id, Character character);
-        Task DeleteCharacter(int id);
+        Task DeleteCharacter(int characterId);
     }
 }

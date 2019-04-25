@@ -27,6 +27,9 @@ namespace UnitTests.Mappers
             {
                 new CharacterDto
                 {
+                    CharacterId = 1,
+                    Name = "Name",
+                    Planet = "Planet",
                     Episodes = new List<Episode>
                     {
                         new Episode {EpisodeName = "NEW Episode 1"},
@@ -36,12 +39,13 @@ namespace UnitTests.Mappers
                     {
                         new Friend {FriendName = "Friend 1"},
                         new Friend {FriendName = "Friend 1"}
-                    },
-                    Name = "Name",
-                    Planet = "Planet"
+                    }
                 },
                 new CharacterDto
                 {
+                    CharacterId = 2,
+                    Name = "LastName",
+                    Planet = "Moon",
                     Episodes = new List<Episode>
                     {
                         new Episode {EpisodeName = "NEW Episode 99"},
@@ -51,29 +55,24 @@ namespace UnitTests.Mappers
                     {
                         new Friend {FriendName = "Friend 120"},
                         new Friend {FriendName = "Friend 130"}
-                    },
-                    Name = "LastName",
-                    Planet = "Moon"
+                    }
                 }
             };
 
             //when
             var output = _characterMapper.MapCharacters(input);
 
-            output.Should().BeEquivalentTo(input);
+            output[0].CharacterId.Should().Be(input[0].CharacterId);
+            output[0].Name.Should().Be(input[0].Name);
+            output[0].Planet.Should().Be(input[0].Planet);
+            output[0].Episodes.Should().BeEquivalentTo(input[0].Episodes.Select(x => x.EpisodeName).ToArray());
+            output[0].Friends.Should().BeEquivalentTo(input[0].Friends.Select(x => x.FriendName).ToArray());
 
-            //then
-            //Assert.AreEqual(input[0].CharacterId, output[0].Id);
-            //Assert.AreEqual(input[0].Episodes.Split(',').ToArray(), output[0].Episodes);
-            //Assert.AreEqual(input[0].Friends.Split(',').ToArray(), output[0].Friends);
-            //Assert.AreEqual(input[0].Name, output[0].Name);
-            //Assert.AreEqual(input[0].Planet, output[0].Planet);
-
-            //Assert.AreEqual(input[1].CharacterId, output[1].Id);
-            //Assert.AreEqual(input[1].Episodes.Split(',').ToArray(), output[1].Episodes);
-            //Assert.AreEqual(input[1].Friends.Split(',').ToArray(), output[1].Friends);
-            //Assert.AreEqual(input[1].Name, output[1].Name);
-            //Assert.AreEqual(input[1].Planet, output[1].Planet);
+            output[1].CharacterId.Should().Be(input[1].CharacterId);
+            output[1].Name.Should().Be(input[1].Name);
+            output[1].Planet.Should().Be(input[1].Planet);
+            output[1].Episodes.Should().BeEquivalentTo(input[1].Episodes.Select(x => x.EpisodeName).ToArray());
+            output[1].Friends.Should().BeEquivalentTo(input[1].Friends.Select(x => x.FriendName).ToArray());
 
         }
 
@@ -101,13 +100,52 @@ namespace UnitTests.Mappers
             var output = _characterMapper.MapSingleCharacter(input);
 
             //then
-            output.Should().BeEquivalentTo(input);
+            output.CharacterId.Should().Be(input.CharacterId);
+            output.Name.Should().Be(input.Name);
+            output.Planet.Should().Be(input.Planet);
+            output.Episodes.Should().BeEquivalentTo(input.Episodes.Select(x => x.EpisodeName).ToArray());
+            output.Friends.Should().BeEquivalentTo(input.Friends.Select(x => x.FriendName).ToArray());
+        }
 
-            //Assert.AreEqual(input.CharacterId, output.Id);
-            //Assert.AreEqual(input.Episodes.Split(',').ToArray(), output.Episodes);
-            //Assert.AreEqual(input.Friends.Split(',').ToArray(), output.Friends);
-            //Assert.AreEqual(input.Name, output.Name);
-            //Assert.AreEqual(input.Planet, output.Planet);
+        [Test]
+        public void should_map_characters_to_character_dtos()
+        {
+            //given
+            var input = new List<Character>
+            {
+                new Character
+                {
+                    CharacterId = 1,
+                    Name = "Name",
+                    Planet = "Planet",
+                    Episodes = new []{"EP1", "EP2"},
+                    Friends = new []{"Fr1", "Fr2"}
+                },
+                new Character
+                {
+                    CharacterId = 2,
+                    Name = "LastName",
+                    Planet = "Moon",
+                    Episodes = new []{"EP55", "EP22"},
+                    Friends = new []{"Fr123", "Fr456"}
+                }
+            };
+
+            //when
+            var output = _characterMapper.MapCaractersToDto(input);
+
+            //then
+            output[0].CharacterId.Should().Be(input[0].CharacterId);
+            output[0].Name.Should().Be(input[0].Name);
+            output[0].Planet.Should().Be(input[0].Planet);
+            output[0].Episodes.Should().BeEquivalentTo(input[0].Episodes.ToList());
+            output[0].Friends.Should().BeEquivalentTo(input[0].Friends.ToList());
+
+            output[1].CharacterId.Should().Be(input[1].CharacterId);
+            output[1].Name.Should().Be(input[1].Name);
+            output[1].Planet.Should().Be(input[1].Planet);
+            output[1].Episodes.Should().BeEquivalentTo(input[1].Episodes.ToList());
+            output[1].Friends.Should().BeEquivalentTo(input[1].Friends.ToList());
         }
     }
 }
