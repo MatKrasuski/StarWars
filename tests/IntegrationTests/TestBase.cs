@@ -11,7 +11,7 @@ namespace IntegrationTests
 
         internal async Task ClearCharactersTable()
         {
-            await DbConnection.ExecuteAsync("truncate table [Characters].[StarWarsCharacters2]", commandType: CommandType.Text);
+            await DbConnection.ExecuteAsync("truncate table [Characters].[StarWarsCharacters]", commandType: CommandType.Text);
             await DbConnection.ExecuteAsync("truncate table [Characters].[Friends]", commandType: CommandType.Text);
             await DbConnection.ExecuteAsync("truncate table [Characters].[Episodes]", commandType: CommandType.Text);
         }
