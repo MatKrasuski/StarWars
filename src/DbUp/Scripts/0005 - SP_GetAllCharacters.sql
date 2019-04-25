@@ -9,7 +9,9 @@ AS
         swc.CharacterId
         ,swc.Name
         ,swc.Planet
+        ,ep.EpisodeId
         ,ep.Episode as 'EpisodeName'
+        ,fr.FriendId
         ,fr.Friend as 'FriendName'
     FROM Characters.StarWarsCharacters swc WITH(NOLOCK)
     LEFT JOIN Characters.Episodes ep WITH(NOLOCK)
