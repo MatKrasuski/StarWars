@@ -60,8 +60,6 @@
     <EmbeddedResource Include="Scripts\0005 - SP_GetAllCharacters.sql" />
     <EmbeddedResource Include="Scripts\0006 - SP_GetCharacterById.sql" />
     <EmbeddedResource Include="Scripts\0007 - SP_InsertCharacter.sql" />
-    <EmbeddedResource Include="Scripts\0008 - SP_InsertEpisode.sql" />
-    <EmbeddedResource Include="Scripts\0009 - SP_InsertFriend.sql" />
     <EmbeddedResource Include="Scripts\0010 - SP_UpdateCharacter.sql" />
   </ItemGroup>
   <ItemGroup>

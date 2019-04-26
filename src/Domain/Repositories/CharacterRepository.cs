@@ -18,11 +18,10 @@ namespace Domain.Repositories
             _dbConnection = dbConnection;
         }
 
-        public async Task<List<CharacterDto>> GetAllCharacters()
+        public async Task<Dictionary<int, CharacterDto>> GetAllCharacters()
         {
             var charactersDictionary = new Dictionary<int, CharacterDto>();
 
-            //when
             await _dbConnection.QueryAsync<CharacterDto, Episode, Friend, CharacterDto>("[Characters].[GetAllCharacters]",
                 (character, episode, friend) =>
                 {
@@ -64,30 +63,13 @@ namespace Domain.Repositories
                 }, splitOn: "EpisodeId,FriendId",
                 commandType: CommandType.StoredProcedure);
 
-            var characters = new List<CharacterDto>();
-
-            foreach (var item in charactersDictionary)
-            {
-                var character = new CharacterDto
-                {
-                    CharacterId = item.Key,
-                    Name = item.Value.Name,
-                    Planet = item.Value.Planet,
-                    Episodes = item.Value.Episodes,
-                    Friends = item.Value.Friends
-                };
-
-                characters.Add(character);
-            }
-
-            return characters;
+            return charactersDictionary;
         }
 
-        public async Task<CharacterDto> GetCharacter(int characterId)
+        public async Task<KeyValuePair<int, CharacterDto>> GetCharacter(int characterId)
         {
             var charactersDictionary = new Dictionary<int, CharacterDto>();
 
-            //when
             await _dbConnection.QueryAsync<CharacterDto, Episode, Friend, CharacterDto>("[Characters].[GetCharacterById]",
                 (character, episode, friend) =>
                 {
@@ -131,23 +113,7 @@ namespace Domain.Repositories
                 commandType: CommandType.StoredProcedure,
                 splitOn: "EpisodeId,FriendId");
 
-            var characters = new List<CharacterDto>();
-
-            foreach (var item in charactersDictionary)
-            {
-                var character = new CharacterDto
-                {
-                    CharacterId = item.Key,
-                    Name = item.Value.Name,
-                    Planet = item.Value.Planet,
-                    Episodes = item.Value.Episodes,
-                    Friends = item.Value.Friends
-                };
-
-                characters.Add(character);
-            }
-
-            return characters.SingleOrDefault();
+            return charactersDictionary.SingleOrDefault();
         }
 
         public async Task AddCharacters(List<CharacterDto> characters)

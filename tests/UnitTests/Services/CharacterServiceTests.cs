@@ -27,8 +27,8 @@ namespace UnitTests.Services
             _characterService = new CharacterService(_characterRepositoryMock.Object, _characterMapperMock.Object);
 
             //Setups
-            _characterRepositoryMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new List<CharacterDto>());
-            _characterRepositoryMock.Setup(m => m.GetCharacter(It.IsAny<int>())).ReturnsAsync(new CharacterDto());
+            _characterRepositoryMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(new Dictionary<int, CharacterDto>());
+            _characterRepositoryMock.Setup(m => m.GetCharacter(It.IsAny<int>())).ReturnsAsync(new KeyValuePair<int, CharacterDto>());
         }
 
         [Test]
@@ -61,25 +61,30 @@ namespace UnitTests.Services
             await _characterService.GetAllCharacters();
 
             //then
-            _characterMapperMock.Verify(m => m.MapCharacters(It.IsAny<List<CharacterDto>>()));
+            _characterMapperMock.Verify(m => m.MapCharacters(It.IsAny<Dictionary<int, CharacterDto>>()));
         }
 
         [Test]
         public async Task should_call_MapSingleCharacter_from_character_mapper()
         {
             //given
+            var characterId = 123;
+            var characterDto = new KeyValuePair<int, CharacterDto>(characterId, new CharacterDto());
+
+            _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync(characterDto);
+
             //when
-            await _characterService.GetCharacter(It.IsAny<int>());
+            await _characterService.GetCharacter(characterId);
 
             //then
-            _characterMapperMock.Verify(m => m.MapSingleCharacter(It.IsAny<CharacterDto>()));
+            _characterMapperMock.Verify(m => m.MapSingleCharacter(characterDto));
         }
 
         [Test]
         public async Task should_return_list_characters()
         {
             //given
-            var charactersDto = new List<CharacterDto>();
+            var charactersDto = new Dictionary<int, CharacterDto>();
 
             _characterRepositoryMock.Setup(m => m.GetAllCharacters()).ReturnsAsync(charactersDto);
             _characterMapperMock.Setup(m => m.MapCharacters(charactersDto)).Returns(new List<Character>());
@@ -96,7 +101,7 @@ namespace UnitTests.Services
         {
             //given
             var characterId = 123;
-            var characterDto = new CharacterDto();
+            var characterDto = new KeyValuePair<int, CharacterDto>();
 
             _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync(characterDto);
             _characterMapperMock.Setup(m => m.MapSingleCharacter(characterDto)).Returns(new Character());
@@ -113,8 +118,9 @@ namespace UnitTests.Services
         {
             //given
             var characterId = 123;
+            KeyValuePair<int, CharacterDto> character = default;
 
-            _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync((CharacterDto)null);
+            _characterRepositoryMock.Setup(m => m.GetCharacter(characterId)).ReturnsAsync(character);
 
             //when
             var result = await _characterService.GetCharacter(characterId);

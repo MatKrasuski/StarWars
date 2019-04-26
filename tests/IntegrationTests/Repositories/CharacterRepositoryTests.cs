@@ -63,26 +63,26 @@ namespace IntegrationTests.Repositories
 
             };
 
-            await InsertCharacter(characters[0]);
-            await InsertCharacter(characters[1]);
+            var firstCharacterId = await InsertCharacter(characters[0]);
+            var secondCharacterId = await InsertCharacter(characters[1]);
 
             //when
             var result = await _characterRepository.GetAllCharacters();
 
             //then
-            result[0].Name.Should().Be(characters[0].Name);
-            result[0].Planet.Should().Be(characters[0].Planet);
-            result[0].Episodes[0].EpisodeName.Should().Be(characters[0].Episodes[0].EpisodeName);
-            result[0].Episodes[1].EpisodeName.Should().Be(characters[0].Episodes[1].EpisodeName);
-            result[0].Friends[0].FriendName.Should().Be(characters[0].Friends[0].FriendName);
-            result[0].Friends[1].FriendName.Should().Be(characters[0].Friends[1].FriendName);
+            result[firstCharacterId].Name.Should().Be(characters[0].Name);
+            result[firstCharacterId].Planet.Should().Be(characters[0].Planet);
+            result[firstCharacterId].Episodes[0].EpisodeName.Should().Be(characters[0].Episodes[0].EpisodeName);
+            result[firstCharacterId].Episodes[1].EpisodeName.Should().Be(characters[0].Episodes[1].EpisodeName);
+            result[firstCharacterId].Friends[0].FriendName.Should().Be(characters[0].Friends[0].FriendName);
+            result[firstCharacterId].Friends[1].FriendName.Should().Be(characters[0].Friends[1].FriendName);
 
-            result[1].Name.Should().Be(characters[1].Name);
-            result[1].Planet.Should().Be(characters[1].Planet);
-            result[1].Episodes[0].EpisodeName.Should().Be(characters[1].Episodes[0].EpisodeName);
-            result[1].Episodes[1].EpisodeName.Should().Be(characters[1].Episodes[1].EpisodeName);
-            result[1].Friends[0].FriendName.Should().Be(characters[1].Friends[0].FriendName);
-            result[1].Friends[1].FriendName.Should().Be(characters[1].Friends[1].FriendName);
+            result[secondCharacterId].Name.Should().Be(characters[1].Name);
+            result[secondCharacterId].Planet.Should().Be(characters[1].Planet);
+            result[secondCharacterId].Episodes[0].EpisodeName.Should().Be(characters[1].Episodes[0].EpisodeName);
+            result[secondCharacterId].Episodes[1].EpisodeName.Should().Be(characters[1].Episodes[1].EpisodeName);
+            result[secondCharacterId].Friends[0].FriendName.Should().Be(characters[1].Friends[0].FriendName);
+            result[secondCharacterId].Friends[1].FriendName.Should().Be(characters[1].Friends[1].FriendName);
         }
 
         [Test]
@@ -111,12 +111,12 @@ namespace IntegrationTests.Repositories
             var result = await _characterRepository.GetCharacter(insertedCandidateId);
 
             //then
-            result.Name.Should().Be(character.Name);
-            result.Planet.Should().Be(character.Planet);
-            result.Episodes[0].EpisodeName.Should().Be(character.Episodes[0].EpisodeName);
-            result.Episodes[1].EpisodeName.Should().Be(character.Episodes[1].EpisodeName);
-            result.Friends[0].FriendName.Should().Be(character.Friends[0].FriendName);
-            result.Friends[1].FriendName.Should().Be(character.Friends[1].FriendName);
+            result.Value.Name.Should().Be(character.Name);
+            result.Value.Planet.Should().Be(character.Planet);
+            result.Value.Episodes[0].EpisodeName.Should().Be(character.Episodes[0].EpisodeName);
+            result.Value.Episodes[1].EpisodeName.Should().Be(character.Episodes[1].EpisodeName);
+            result.Value.Friends[0].FriendName.Should().Be(character.Friends[0].FriendName);
+            result.Value.Friends[1].FriendName.Should().Be(character.Friends[1].FriendName);
         }
 
         [Test]
@@ -166,19 +166,19 @@ namespace IntegrationTests.Repositories
             var result = await _characterRepository.GetAllCharacters();
 
             //then
-            result[0].Name.Should().Be(characters[0].Name);
-            result[0].Planet.Should().Be(characters[0].Planet);
-            result[0].Episodes[0].EpisodeName.Should().Be(characters[0].Episodes[0].EpisodeName);
-            result[0].Episodes[1].EpisodeName.Should().Be(characters[0].Episodes[1].EpisodeName);
-            result[0].Friends[0].FriendName.Should().Be(characters[0].Friends[0].FriendName);
-            result[0].Friends[1].FriendName.Should().Be(characters[0].Friends[1].FriendName);
+            result[1].Name.Should().Be(characters[0].Name);
+            result[1].Planet.Should().Be(characters[0].Planet);
+            result[1].Episodes[0].EpisodeName.Should().Be(characters[0].Episodes[0].EpisodeName);
+            result[1].Episodes[1].EpisodeName.Should().Be(characters[0].Episodes[1].EpisodeName);
+            result[1].Friends[0].FriendName.Should().Be(characters[0].Friends[0].FriendName);
+            result[1].Friends[1].FriendName.Should().Be(characters[0].Friends[1].FriendName);
 
-            result[1].Name.Should().Be(characters[1].Name);
-            result[1].Planet.Should().Be(characters[1].Planet);
-            result[1].Episodes[0].EpisodeName.Should().Be(characters[1].Episodes[0].EpisodeName);
-            result[1].Episodes[1].EpisodeName.Should().Be(characters[1].Episodes[1].EpisodeName);
-            result[1].Friends[0].FriendName.Should().Be(characters[1].Friends[0].FriendName);
-            result[1].Friends[1].FriendName.Should().Be(characters[1].Friends[1].FriendName);
+            result[2].Name.Should().Be(characters[1].Name);
+            result[2].Planet.Should().Be(characters[1].Planet);
+            result[2].Episodes[0].EpisodeName.Should().Be(characters[1].Episodes[0].EpisodeName);
+            result[2].Episodes[1].EpisodeName.Should().Be(characters[1].Episodes[1].EpisodeName);
+            result[2].Friends[0].FriendName.Should().Be(characters[1].Friends[0].FriendName);
+            result[2].Friends[1].FriendName.Should().Be(characters[1].Friends[1].FriendName);
         }
 
         [Test]
@@ -219,18 +219,20 @@ namespace IntegrationTests.Repositories
 
             var characterInsertedId = await InsertCharacter(character);
 
+            characterToUpdate.CharacterId = characterInsertedId;
+
             //when
             await _characterRepository.UpdateCharacter(characterToUpdate);
 
             //then
             var result = await _characterRepository.GetCharacter(characterInsertedId);
 
-            result.Name.Should().Be(characterToUpdate.Name);
-            result.Planet.Should().Be(characterToUpdate.Planet);
-            result.Episodes[0].EpisodeName.Should().Be(characterToUpdate.Episodes[0].EpisodeName);
-            result.Episodes[1].EpisodeName.Should().Be(characterToUpdate.Episodes[1].EpisodeName);
-            result.Friends[0].FriendName.Should().Be(characterToUpdate.Friends[0].FriendName);
-            result.Friends[1].FriendName.Should().Be(characterToUpdate.Friends[1].FriendName);
+            result.Value.Name.Should().Be(characterToUpdate.Name);
+            result.Value.Planet.Should().Be(characterToUpdate.Planet);
+            result.Value.Episodes[0].EpisodeName.Should().Be(characterToUpdate.Episodes[0].EpisodeName);
+            result.Value.Episodes[1].EpisodeName.Should().Be(characterToUpdate.Episodes[1].EpisodeName);
+            result.Value.Friends[0].FriendName.Should().Be(characterToUpdate.Friends[0].FriendName);
+            result.Value.Friends[1].FriendName.Should().Be(characterToUpdate.Friends[1].FriendName);
         }
 
         [Test]
@@ -261,7 +263,8 @@ namespace IntegrationTests.Repositories
             //then
             var result = await _characterRepository.GetCharacter(insertedCharacterId);
 
-            result.Should().BeNull();
+            result.Key.Should().Be(0);
+            result.Value.Should().BeNull();
         }
 
         private async Task<int> InsertCharacter(CharacterDto character)
@@ -271,30 +274,35 @@ namespace IntegrationTests.Repositories
                 {
                     character.Name,
                     character.Planet
+
                 },
                 commandType: CommandType.StoredProcedure)).Single();
 
+            var episodes = new DataTable();
+            episodes.Columns.Add("Id", typeof(int));
+            episodes.Columns.Add("StringItem", typeof(string));
+
             foreach (var characterEpisode in character.Episodes)
             {
-                await DbConnection.ExecuteAsync("[Characters].[InsertEpisode]",
-                    new
-                    {
-                        Episode = characterEpisode.EpisodeName,
-                        CharacterId = characterId
-                    },
-                    commandType: CommandType.StoredProcedure);
+                episodes.Rows.Add(characterId, characterEpisode.EpisodeName);
             }
+
+            var friends = new DataTable();
+            friends.Columns.Add("Id", typeof(int));
+            friends.Columns.Add("StringItem", typeof(string));
 
             foreach (var characterFriend in character.Friends)
             {
-                await DbConnection.ExecuteAsync("[Characters].[InsertFriend]",
-                    new
-                    {
-                        Friend = characterFriend.FriendName,
-                        CharacterId = characterId
-                    },
-                    commandType: CommandType.StoredProcedure);
+                friends.Rows.Add(characterId, characterFriend.FriendName);
             }
+
+            await DbConnection.ExecuteAsync("[Characters].[InsertEpisodesAndFriends]",
+                new
+                {
+                    Episodes = episodes.AsTableValuedParameter("dbo.StringValues"),
+                    Friends = friends.AsTableValuedParameter("dbo.StringValues")
+                },
+                commandType: CommandType.StoredProcedure);
 
             return characterId;
         }

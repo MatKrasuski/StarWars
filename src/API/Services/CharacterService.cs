@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Mappers;
 using Bussiness.Models;
+using Domain.Dtos;
 
 namespace API.Services
 {
@@ -25,9 +26,9 @@ namespace API.Services
 
         public async Task<Character> GetCharacter(int characterId)
         {
-            var characterDto =  await _characterRepository.GetCharacter(characterId);
+            var characterDto = await _characterRepository.GetCharacter(characterId);
 
-            if (characterDto == null)
+            if (characterDto.Equals(default(KeyValuePair<int, CharacterDto>)))
             {
                 return new NullCharacter();
             }
