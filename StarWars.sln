@@ -15,17 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bussiness", "src\Bussiness\Bussiness.csproj", "{1C5FB2D9-DB7F-4790-8518-FC689D40DF38}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{72574DA0-0118-4A55-AAA2-87E62F92B114}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\Create_DB_and_Schema.sql = scripts\Create_DB_and_Schema.sql
-		scripts\Create_Table_characters.sql = scripts\Create_Table_characters.sql
-		scripts\SP_delete_character.sql = scripts\SP_delete_character.sql
-		scripts\SP_get_all_characters.sql = scripts\SP_get_all_characters.sql
-		scripts\SP_get_character_by_character_id.sql = scripts\SP_get_character_by_character_id.sql
-		scripts\SP_insert_characters.sql = scripts\SP_insert_characters.sql
-		scripts\SP_update_character.sql = scripts\SP_update_character.sql
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "src\DbUp\DbUp.csproj", "{7D327646-C049-4D32-ABEE-7D266660C19E}"
 EndProject
 Global

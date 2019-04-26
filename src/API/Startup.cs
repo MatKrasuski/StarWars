@@ -2,7 +2,6 @@
 using System.Data.SqlClient;
 using API.Mappers;
 using API.Services;
-using Domain.DbClients;
 using Domain.Interfaces;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
