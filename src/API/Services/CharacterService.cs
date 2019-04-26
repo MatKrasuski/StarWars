@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Mappers;
 using Bussiness.Models;
+using Domain.Dtos;
 
 namespace API.Services
 {
@@ -17,17 +18,17 @@ namespace API.Services
             _characterMapper = characterMapper;
         }
 
-        public async Task<List<CharacterBase>> GetAllCharacters()
+        public async Task<List<Character>> GetAllCharacters()
         {
             var charactersDto =  await _characterRepository.GetAllCharacters();
             return _characterMapper.MapCharacters(charactersDto);
         }
 
-        public async Task<CharacterBase> GetCharacter(int characterId)
+        public async Task<Character> GetCharacter(int characterId)
         {
-            var characterDto =  await _characterRepository.GetCharacter(characterId);
+            var characterDto = await _characterRepository.GetCharacter(characterId);
 
-            if (characterDto == null)
+            if (characterDto.Equals(default(KeyValuePair<int, CharacterDto>)))
             {
                 return new NullCharacter();
             }
@@ -35,19 +36,21 @@ namespace API.Services
             return _characterMapper.MapSingleCharacter(characterDto);
         }
 
-        public async Task AddCharacters(List<Character> character)
+        public async Task AddCharacters(List<Character> characters)
         {
-            await _characterRepository.AddCharacters(character);
+            var characterDtos = _characterMapper.MapCaractersToDtos(characters);
+            await _characterRepository.AddCharacters(characterDtos);
         }
 
-        public async  Task UpdateCharacter(int id, Character character)
+        public async  Task UpdateCharacter(int characterId, Character character)
         {
-            await _characterRepository.UpdateCharacter(id, character);
+            var characterDto = _characterMapper.MapSingleCaracterToDto(characterId, character);
+            await _characterRepository.UpdateCharacter(characterDto);
         }
 
-        public async Task DeleteCharacter(int id)
+        public async Task DeleteCharacter(int characterId)
         {
-            await _characterRepository.DeleteCharacter(id);
+            await _characterRepository.DeleteCharacter(characterId);
         }
     }
 }

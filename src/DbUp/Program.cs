@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 
@@ -6,36 +6,44 @@ namespace DbUp
 {
     class Program
     {
-        static int Main(string[] args)
+        static void Main(string[] args)
         {
-            var connectionString =
-                args.FirstOrDefault()
-                ?? "Server=localhost\\SQLEXPRESS;Database=StarWars;Trusted_Connection=True;";
-
-            var upgrader =
-                DeployChanges.To
-                    .SqlDatabase(connectionString)
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                    .LogToConsole()
-                    .Build();
-
-            var result = upgrader.PerformUpgrade();
-
-            if (!result.Successful)
+            var dBs = new[]
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(result.Error);
-                Console.ResetColor();
-#if DEBUG
-                Console.ReadLine();
-#endif
-                return -1;
-            }
+                "Server=localhost\\SQLEXPRESS;Database=StarWars;Trusted_Connection=True;",
+                "Server=localhost\\SQLEXPRESS;Database=StarWarsTest;Trusted_Connection=True;"
+            };
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success!");
-            Console.ResetColor();
-            return 0;
+            foreach (var dB in dBs)
+            {
+                var connectionString =
+                    args.FirstOrDefault()
+                    ?? dB;
+
+                var upgrader =
+                    DeployChanges.To
+                        .SqlDatabase(connectionString)
+                        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                        .LogToConsole()
+                        .Build();
+
+                var result = upgrader.PerformUpgrade();
+
+                if (!result.Successful)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(result.Error);
+                    Console.ResetColor();
+#if DEBUG
+                    Console.ReadLine();
+#endif
+                }
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Success!");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
         }
     }
 }

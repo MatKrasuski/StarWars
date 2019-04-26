@@ -11,4 +11,3 @@ AS
    WHERE characterId = @CharacterId
  END
 GO
-

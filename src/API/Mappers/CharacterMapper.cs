@@ -7,19 +7,19 @@ namespace API.Mappers
 {
     public class CharacterMapper : ICharacterMapper
     {
-        public List<CharacterBase> MapCharacters(List<CharacterDto> charactersDto)
+        public List<Character> MapCharacters(Dictionary<int, CharacterDto> charactersDto)
         {
-            var characters = new List<CharacterBase>();
+            var characters = new List<Character>();
 
             foreach (var characterDto in charactersDto)
             {
-                var character = new  CharacterBase
+                var character = new  Character
                 {
-                    Id = characterDto.CharacterId,
-                    Episodes = characterDto.Episodes.Split('|').ToArray(),
-                    Planet = characterDto.Planet,
-                    Name = characterDto.Name,
-                    Friends = characterDto.Friends.Split('|').ToArray()
+                    CharacterId = characterDto.Key,
+                    Planet = characterDto.Value.Planet,
+                    Name = characterDto.Value.Name,
+                    Episodes = characterDto.Value.Episodes.Select(s => s.EpisodeName).ToArray(),
+                    Friends = characterDto.Value.Friends.Select(s => s.FriendName).ToArray()
                 };
 
                 characters.Add(character);
@@ -28,15 +28,49 @@ namespace API.Mappers
             return characters;
         }
 
-        public CharacterBase MapSingleCharacter(CharacterDto characterDto)
+        public Character MapSingleCharacter(KeyValuePair<int, CharacterDto> characterDto)
         {
-            return  new CharacterBase
+            return  new Character
             {
-                Friends = characterDto.Friends.Split('|').ToArray(),
-                Name = characterDto.Name,
-                Planet = characterDto.Planet,
-                Episodes = characterDto.Episodes.Split('|').ToArray(),
-                Id = characterDto.CharacterId
+                CharacterId = characterDto.Key,
+                Name = characterDto.Value.Name,
+                Planet = characterDto.Value.Planet,
+                Episodes = characterDto.Value.Episodes.Select(s => s.EpisodeName).ToArray(),
+                Friends = characterDto.Value.Friends.Select(s => s.FriendName).ToArray()
+
+            };
+        }
+
+        public List<CharacterDto> MapCaractersToDtos(List<Character> characters)
+        {
+            var charactersDto = new List<CharacterDto>();
+
+            foreach (var characterItem in characters)
+            {
+                var character = new CharacterDto
+                {
+                    CharacterId = characterItem.CharacterId,
+                    Planet = characterItem.Planet,
+                    Name = characterItem.Name,
+                    Episodes = characterItem.Episodes.Select(x => new Episode{EpisodeName = x}).ToList(),
+                    Friends = characterItem.Friends.Select(x => new Friend { FriendName = x }).ToList()
+                };
+
+                charactersDto.Add(character);
+            }
+
+            return charactersDto;
+        }
+
+        public CharacterDto MapSingleCaracterToDto(int characterId, Character character)
+        {
+            return new CharacterDto
+            {
+                CharacterId = characterId,
+                Planet = character.Planet,
+                Name = character.Name,
+                Episodes = character.Episodes.Select(x => new Episode { EpisodeName = x }).ToList(),
+                Friends = character.Friends.Select(x => new Friend { FriendName = x }).ToList()
             };
         }
     }

@@ -7,11 +7,13 @@ namespace IntegrationTests
 {
     public class TestBase
     {
-        protected readonly IDbConnection SqlConnection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWars;Trusted_Connection=True;");
+        protected readonly IDbConnection DbConnection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWarsTest;Trusted_Connection=True;");
 
         internal async Task ClearCharactersTable()
         {
-            await SqlConnection.ExecuteAsync("truncate table [Characters].[StarWarsCharacters]", commandType: CommandType.Text);
+            await DbConnection.ExecuteAsync("truncate table [Characters].[StarWarsCharacters]", commandType: CommandType.Text);
+            await DbConnection.ExecuteAsync("truncate table [Characters].[Friends]", commandType: CommandType.Text);
+            await DbConnection.ExecuteAsync("truncate table [Characters].[Episodes]", commandType: CommandType.Text);
         }
     }
 }

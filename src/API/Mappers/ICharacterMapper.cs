@@ -6,7 +6,9 @@ namespace API.Mappers
 {
     public interface ICharacterMapper
     {
-        List<CharacterBase> MapCharacters(List<CharacterDto> charactersDto);
-        CharacterBase MapSingleCharacter(CharacterDto characterDto);
+        List<Character> MapCharacters(Dictionary<int, CharacterDto> charactersDto);
+        Character MapSingleCharacter(KeyValuePair<int, CharacterDto> characterDto);
+        List<CharacterDto> MapCaractersToDtos(List<Character> characters);
+        CharacterDto MapSingleCaracterToDto(int characterId, Character character);
     }
 }

@@ -18,47 +18,145 @@ namespace Domain.Repositories
             _dbConnection = dbConnection;
         }
 
-        public async Task<List<CharacterDto>> GetAllCharacters()
+        public async Task<Dictionary<int, CharacterDto>> GetAllCharacters()
         {
-            return (await _dbConnection.QueryAsync<CharacterDto>("[Characters].[GetCharacters]")).ToList();
-        }
+            var charactersDictionary = new Dictionary<int, CharacterDto>();
 
-        public async Task<CharacterDto> GetCharacter(int characterId)
-        {
-            return (await _dbConnection.QueryAsync<CharacterDto>("[Characters].[GetCharacterByCharacterId]", 
-                new
+            await _dbConnection.QueryAsync<CharacterDto, Episode, Friend, CharacterDto>("[Characters].[GetAllCharacters]",
+                (character, episode, friend) =>
                 {
-                    CharacterId = characterId
-                }, commandType: CommandType.StoredProcedure)
-                ).SingleOrDefault();
+                    if (!charactersDictionary.TryGetValue(character.CharacterId, out var characterEntry))
+                    {
+                        charactersDictionary.Add(character.CharacterId, characterEntry = character);
+                    }
+
+                    //episodes
+                    if (characterEntry.Episodes == null)
+                    {
+                        characterEntry.Episodes = new List<Episode>();
+                    }
+
+                    if (episode != null)
+                    {
+                        if (characterEntry.Episodes.All(x => x.EpisodeId != episode.EpisodeId))
+                        {
+                            characterEntry.Episodes.Add(episode);
+                        }
+                    }
+
+                    //friends
+                    if (characterEntry.Friends == null)
+                    {
+                        characterEntry.Friends = new List<Friend>();
+                    }
+
+                    if (friend != null)
+                    {
+                        if (characterEntry.Friends.All(x => x.FriendId != friend.FriendId))
+                        {
+                            characterEntry.Friends.Add(friend);
+                        }
+                    }
+
+                    return characterEntry;
+
+                }, splitOn: "EpisodeId,FriendId",
+                commandType: CommandType.StoredProcedure);
+
+            return charactersDictionary;
         }
 
-        public async Task AddCharacters(List<Character> characters)
+        public async Task<KeyValuePair<int, CharacterDto>> GetCharacter(int characterId)
+        {
+            var charactersDictionary = new Dictionary<int, CharacterDto>();
+
+            await _dbConnection.QueryAsync<CharacterDto, Episode, Friend, CharacterDto>("[Characters].[GetCharacterById]",
+                (character, episode, friend) =>
+                {
+                    if (!charactersDictionary.TryGetValue(character.CharacterId, out var characterEntry))
+                    {
+                        charactersDictionary.Add(character.CharacterId, characterEntry = character);
+                    }
+
+                    //episodes
+                    if (characterEntry.Episodes == null)
+                    {
+                        characterEntry.Episodes = new List<Episode>();
+                    }
+
+                    if (episode != null)
+                    {
+                        if (characterEntry.Episodes.All(x => x.EpisodeId != episode.EpisodeId))
+                        {
+                            characterEntry.Episodes.Add(episode);
+                        }
+                    }
+
+                    //friends
+                    if (characterEntry.Friends == null)
+                    {
+                        characterEntry.Friends = new List<Friend>();
+                    }
+
+                    if (friend != null)
+                    {
+                        if (characterEntry.Friends.All(x => x.FriendId != friend.FriendId))
+                        {
+                            characterEntry.Friends.Add(friend);
+                        }
+                    }
+
+                    return characterEntry;
+
+                },
+                new { CharacterId = characterId },
+                commandType: CommandType.StoredProcedure,
+                splitOn: "EpisodeId,FriendId");
+
+            return charactersDictionary.SingleOrDefault();
+        }
+
+        public async Task AddCharacters(List<CharacterDto> characters)
         {
             foreach (var character in characters)
             {
-                await _dbConnection.ExecuteAsync("[Characters].[InsertCharacters]", 
+                var characterId = (await _dbConnection.QueryAsync<int>("[Characters].[InsertCharacter]",
                     new
                     {
-                        Name = character.Name,
-                        Episodes = string.Join('|', character.Episodes),
-                        character.Planet,
-                        Friends = string.Join('|', character.Friends),
-                    }, commandType: CommandType.StoredProcedure);
+                        character.Name,
+                        character.Planet
+                        
+                    },
+                    commandType: CommandType.StoredProcedure)).Single();
+
+                var episodes = CreateEpisodesNamesDataTable(characterId, character.Episodes);
+                var friends = CreateFriendsNamesDataTable(characterId, character.Friends);
+
+                await _dbConnection.ExecuteAsync("[Characters].[InsertEpisodesAndFriends]",
+                    new
+                    {
+                        Episodes = episodes.AsTableValuedParameter("dbo.StringValues"),
+                        Friends = friends.AsTableValuedParameter("dbo.StringValues")
+                    }, 
+                    commandType: CommandType.StoredProcedure);
             }
         }
 
-        public async Task UpdateCharacter(int characterId, Character character)
+        public async Task UpdateCharacter(CharacterDto character)
         {
+            var episodes = CreateEpisodesNamesDataTable(character.CharacterId, character.Episodes);
+            var friends = CreateFriendsNamesDataTable(character.CharacterId, character.Friends);
+
             await _dbConnection.ExecuteAsync("[Characters].[UpdateCharacter]",
                 new
                 {
-                    CharacterId = characterId,
-                    Name = character.Name,
-                    Episodes = string.Join('|', character.Episodes),
+                    character.CharacterId,
+                    character.Name,
                     character.Planet,
-                    Friends = string.Join('|', character.Friends),
-                }, commandType: CommandType.StoredProcedure);
+                    Episodes = episodes.AsTableValuedParameter("dbo.StringValues"),
+                    Friends = friends.AsTableValuedParameter("dbo.StringValues")
+                },
+                commandType: CommandType.StoredProcedure);
         }
 
         public async Task DeleteCharacter(int characterId)
@@ -67,7 +165,36 @@ namespace Domain.Repositories
                 new
                 {
                     CharacterId = characterId
-                }, commandType: CommandType.StoredProcedure);
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        private static DataTable CreateFriendsNamesDataTable(int characterId, List<Friend> characterFriends)
+        {
+            var friends = new DataTable();
+            friends.Columns.Add("Id", typeof(int));
+            friends.Columns.Add("StringItem", typeof(string));
+
+            foreach (var characterFriend in characterFriends)
+            {
+                friends.Rows.Add(characterId, characterFriend.FriendName);
+            }
+
+            return friends;
+        }
+
+        private static DataTable CreateEpisodesNamesDataTable(int characterId, List<Episode> characterEpisodes)
+        {
+            var episodes = new DataTable();
+            episodes.Columns.Add("Id", typeof(int));
+            episodes.Columns.Add("StringItem", typeof(string));
+
+            foreach (var characterEpisode in characterEpisodes)
+            {
+                episodes.Rows.Add(characterId, characterEpisode.EpisodeName);
+            }
+
+            return episodes;
         }
     }
 }
