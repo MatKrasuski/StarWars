@@ -220,7 +220,7 @@ namespace IntegrationTests.Repositories
             var characterInsertedId = await InsertCharacter(character);
 
             //when
-            await _characterRepository.UpdateCharacter(characterInsertedId, characterToUpdate);
+            await _characterRepository.UpdateCharacter(characterToUpdate);
 
             //then
             var result = await _characterRepository.GetCharacter(characterInsertedId);

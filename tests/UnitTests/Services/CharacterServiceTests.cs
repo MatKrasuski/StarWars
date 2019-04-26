@@ -123,33 +123,64 @@ namespace UnitTests.Services
             result.Should().BeOfType<NullCharacter>();
         }
 
-        [Ignore("to fix after mapper fix")]
+        [Test]
+        public async Task should_call_MapCaractersToDtos()
+        {
+            //given
+            var characters = new List<Character> { new Character() };
+
+            //when
+            await _characterService.AddCharacters(characters);
+
+            //then
+            _characterMapperMock.Verify(m => m.MapCaractersToDtos(characters));
+        }
+
         [Test]
         public async Task should_call_character_repository_AddCharacter()
         {
             //given
-            var character = new List<Character>{new Character()};
+            var characters = new List<Character>{new Character()};
+            var characterDtos = new List<CharacterDto>();
+
+            _characterMapperMock.Setup(m => m.MapCaractersToDtos(characters)).Returns(characterDtos);
 
             //when
-            await _characterService.AddCharacters(character);
+            await _characterService.AddCharacters(characters);
 
             //then
-            //_characterRepositoryMock.Verify(m => m.AddCharacters(character));
+            _characterRepositoryMock.Verify(m => m.AddCharacters(characterDtos));
         }
 
-        [Ignore("to fix after mapper fix")]
+        [Test]
+        public async Task should_call_MapSingleCaracterToDto()
+        {
+            //given
+            var characterId = 123;
+            var character = new Character();
+
+            //when
+            await _characterService.UpdateCharacter(characterId, character);
+
+            //then
+            _characterMapperMock.Verify(m => m.MapSingleCaracterToDto(characterId, character));
+        }
+
         [Test]
         public async Task should_call_character_repository_UpdateCharacter()
         {
             //given
-            var id = 123;
+            var characterId = 123;
             var character = new Character();
+            var characterDto = new CharacterDto();
+
+            _characterMapperMock.Setup(m => m.MapSingleCaracterToDto(characterId, character)).Returns(characterDto);
 
             //when
-            await _characterService.UpdateCharacter(id, character);
+            await _characterService.UpdateCharacter(characterId, character);
 
             //then
-            //_characterRepositoryMock.Verify(m => m.UpdateCharacter(id, character));
+            _characterRepositoryMock.Verify(m => m.UpdateCharacter(characterDto));
         }
 
         [Test]

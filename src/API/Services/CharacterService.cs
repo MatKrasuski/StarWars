@@ -35,14 +35,16 @@ namespace API.Services
             return _characterMapper.MapSingleCharacter(characterDto);
         }
 
-        public async Task AddCharacters(List<Character> character)
+        public async Task AddCharacters(List<Character> characters)
         {
-            //await _characterRepository.AddCharacters(character);
+            var characterDtos = _characterMapper.MapCaractersToDtos(characters);
+            await _characterRepository.AddCharacters(characterDtos);
         }
 
         public async  Task UpdateCharacter(int characterId, Character character)
         {
-            //await _characterRepository.UpdateCharacter(characterId, character);
+            var characterDto = _characterMapper.MapSingleCaracterToDto(characterId, character);
+            await _characterRepository.UpdateCharacter(characterDto);
         }
 
         public async Task DeleteCharacter(int characterId)

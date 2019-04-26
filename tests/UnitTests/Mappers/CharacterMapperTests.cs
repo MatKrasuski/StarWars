@@ -132,20 +132,45 @@ namespace UnitTests.Mappers
             };
 
             //when
-            var output = _characterMapper.MapCaractersToDto(input);
+            var output = _characterMapper.MapCaractersToDtos(input);
 
             //then
             output[0].CharacterId.Should().Be(input[0].CharacterId);
             output[0].Name.Should().Be(input[0].Name);
             output[0].Planet.Should().Be(input[0].Planet);
-            output[0].Episodes.Should().BeEquivalentTo(input[0].Episodes.ToList());
-            output[0].Friends.Should().BeEquivalentTo(input[0].Friends.ToList());
+            output[0].Episodes.Should().BeEquivalentTo(input[0].Episodes.Select(x => new Episode{EpisodeName = x}).ToList());
+            output[0].Friends.Should().BeEquivalentTo(input[0].Friends.Select(x => new Friend { FriendName = x }).ToList());
 
             output[1].CharacterId.Should().Be(input[1].CharacterId);
             output[1].Name.Should().Be(input[1].Name);
             output[1].Planet.Should().Be(input[1].Planet);
-            output[1].Episodes.Should().BeEquivalentTo(input[1].Episodes.ToList());
-            output[1].Friends.Should().BeEquivalentTo(input[1].Friends.ToList());
+            output[1].Episodes.Should().BeEquivalentTo(input[1].Episodes.Select(x => new Episode{EpisodeName = x}).ToList());
+            output[1].Friends.Should().BeEquivalentTo(input[1].Friends.Select(x => new Friend { FriendName = x }).ToList());
+        }
+
+        [Test]
+        public void should_map_character_to_single_characte_dto()
+        {
+            //given
+            var characterId = 123;
+            var input = new Character
+            {
+                CharacterId = characterId,
+                Name = "Name",
+                Planet = "Planet",
+                Episodes = new[] {"EP1", "EP2"},
+                Friends = new[] {"Fr1", "Fr2"}
+            };
+
+            //when
+            var output = _characterMapper.MapSingleCaracterToDto(characterId, input);
+
+            //then
+            output.CharacterId.Should().Be(input.CharacterId);
+            output.Name.Should().Be(input.Name);
+            output.Planet.Should().Be(input.Planet);
+            output.Episodes.Should().BeEquivalentTo(input.Episodes.Select(x => new Episode { EpisodeName = x }).ToList());
+            output.Friends.Should().BeEquivalentTo(input.Friends.Select(x => new Friend { FriendName = x }).ToList());
         }
     }
 }

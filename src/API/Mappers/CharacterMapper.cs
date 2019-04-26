@@ -41,7 +41,7 @@ namespace API.Mappers
             };
         }
 
-        public List<CharacterDto> MapCaractersToDto(List<Character> characters)
+        public List<CharacterDto> MapCaractersToDtos(List<Character> characters)
         {
             var charactersDto = new List<CharacterDto>();
 
@@ -52,14 +52,26 @@ namespace API.Mappers
                     CharacterId = characterItem.CharacterId,
                     Planet = characterItem.Planet,
                     Name = characterItem.Name,
-                    //Episodes = characterItem.Episodes.Select(x => ),
-                    //Friends = characterItem.Friends.Select(s => s.FriendName).ToArray()
+                    Episodes = characterItem.Episodes.Select(x => new Episode{EpisodeName = x}).ToList(),
+                    Friends = characterItem.Friends.Select(x => new Friend { FriendName = x }).ToList()
                 };
 
                 charactersDto.Add(character);
             }
 
             return charactersDto;
+        }
+
+        public CharacterDto MapSingleCaracterToDto(int characterId, Character character)
+        {
+            return new CharacterDto
+            {
+                CharacterId = characterId,
+                Planet = character.Planet,
+                Name = character.Name,
+                Episodes = character.Episodes.Select(x => new Episode { EpisodeName = x }).ToList(),
+                Friends = character.Friends.Select(x => new Friend { FriendName = x }).ToList()
+            };
         }
     }
 }

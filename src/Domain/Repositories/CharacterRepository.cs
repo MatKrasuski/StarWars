@@ -176,15 +176,15 @@ namespace Domain.Repositories
             }
         }
 
-        public async Task UpdateCharacter(int characterId, CharacterDto character)
+        public async Task UpdateCharacter(CharacterDto character)
         {
-            var episodes = CreateEpisodesNamesDataTable(characterId, character.Episodes);
-            var friends = CreateFriendsNamesDataTable(characterId, character.Friends);
+            var episodes = CreateEpisodesNamesDataTable(character.CharacterId, character.Episodes);
+            var friends = CreateFriendsNamesDataTable(character.CharacterId, character.Friends);
 
             await _dbConnection.ExecuteAsync("[Characters].[UpdateCharacter]",
                 new
                 {
-                    CharacterId = characterId,
+                    character.CharacterId,
                     character.Name,
                     character.Planet,
                     Episodes = episodes.AsTableValuedParameter("dbo.StringValues"),
