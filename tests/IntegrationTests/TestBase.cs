@@ -7,7 +7,7 @@ namespace IntegrationTests
 {
     public class TestBase
     {
-        protected readonly IDbConnection DbConnection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWarsTest;Trusted_Connection=True;");
+        protected readonly IDbConnection DbConnection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=StarWars;Trusted_Connection=True;");
 
         internal async Task ClearCharactersTable()
         {

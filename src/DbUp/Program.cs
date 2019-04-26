@@ -10,7 +10,7 @@ namespace DbUp
         {
             var connectionString =
                 args.FirstOrDefault()
-                ?? "Server=localhost\\SQLEXPRESS;Database=StarWarsTest;Trusted_Connection=True;";
+                ?? "Server=localhost\\SQLEXPRESS;Database=StarWars;Trusted_Connection=True;";
 
             var upgrader =
                 DeployChanges.To

@@ -68,5 +68,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Scripts\0012 - SP_DeleteCharacter.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\0000 - CreateCharactersSchema.sql" />
+    <EmbeddedResource Include="Scripts\0001 - CreateStingValueType.sql" />
+    <EmbeddedResource Include="Scripts\0002 - CT_Characters.sql" />
+    <EmbeddedResource Include="Scripts\0003 - CT_Episodes.sql" />
+    <EmbeddedResource Include="Scripts\0004 - CT_Friends.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
